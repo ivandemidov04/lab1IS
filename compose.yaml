@@ -1,0 +1,23 @@
+services:
+  postgresql:
+    image: postgres:15.4
+    container_name: postgres_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+    networks:
+      - postgresql_bd_net
+
+networks:
+  postgresql_bd_net:
+    driver: bridge
+
+volumes:
+  postgresql-data:
+  pgadmin-data:
