@@ -23,11 +23,13 @@ public class UserController {
     }
 
     @PostMapping("join")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<JoinDTO> createJoin() {
         return new ResponseEntity<>(userService.createJoin(), HttpStatus.CREATED);
     }
 
     @GetMapping("/get-admin")
+    @PreAuthorize("hasRole('USER')")
     public void getAdmin() {
         userService.getAdmin();
     }
