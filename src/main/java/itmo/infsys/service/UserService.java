@@ -69,16 +69,17 @@ public class UserService {
         return mapJoinToJoinDTO(saved);
     }
 
-    public UserDTO updateJoin(Long id, Boolean status) {
+    public UserDTO approveJoin(Long id) {
         Join join = joinRepository.findById(id).get();
         User user = userRepository.findById(join.getUser().getId()).get();
-        if (status) {
-            user.setRole(Role.ROLE_ADMIN);
-            User updated = save(user);//апдейтнет ли роль???
-            return mapUserToUserDTO(updated);
-        }
+        user.setRole(Role.ROLE_ADMIN);
+        User updated = save(user);
+        deleteJoin(id);
+        return mapUserToUserDTO(updated);
+    }
+
+    public void deleteJoin(Long id) {
         joinRepository.deleteById(id);
-        return mapUserToUserDTO(user);
     }
 
     public List<UserDTO> getAllUsers() {

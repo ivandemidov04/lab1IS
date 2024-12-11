@@ -23,7 +23,6 @@ public class UserController {
     }
 
     @PostMapping("join")
-//    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<JoinDTO> createJoin() {
         return new ResponseEntity<>(userService.createJoin(), HttpStatus.CREATED);
     }
@@ -45,9 +44,15 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllJoins(), HttpStatus.OK);
     }
 
-    @PutMapping("{id}")//join id
+    @PostMapping("{id}")//join id
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDTO> updateAdminJoinRequest(@PathVariable Long id, @RequestBody Boolean status) {
-        return new ResponseEntity<>(userService.updateJoin(id, status), HttpStatus.OK);
+    public ResponseEntity<UserDTO> approveJoin(@PathVariable Long id) {
+        return new ResponseEntity<>(userService.approveJoin(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")//join id
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteJoin(@PathVariable Long id) {
+        userService.deleteJoin(id);
     }
 }
