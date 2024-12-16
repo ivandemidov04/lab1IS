@@ -180,7 +180,7 @@ const CarTable = () => {
             {editingCar && (
                 <div style={modalStyles.overlay}>
                     <div style={modalStyles.container}>
-                        <h3>Редактирование автомобиля</h3>
+                        <h3>Edit Car</h3>
                         <form onSubmit={(e) => e.preventDefault()}>
                             <label>
                                 Cool:
@@ -190,22 +190,22 @@ const CarTable = () => {
                                     value="true"
                                     checked={editingCar.cool === true}
                                     onChange={() => setEditingCar({ ...editingCar, cool: true })}
-                                /> Да
+                                /> Yes
                                 <input
                                     type="radio"
                                     name="cool"
                                     value="false"
                                     checked={editingCar.cool === false}
                                     onChange={() => setEditingCar({ ...editingCar, cool: false })}
-                                /> Нет
+                                /> No
                             </label>
                             <br />
                             {error && <p style={{ color: 'red' }}>{error}</p>}
                             <button type="button" onClick={handleEditSubmit}>
-                                Сохранить изменения
+                                Save changes
                             </button>
                             <button type="button" onClick={() => setEditingCar(null)}>
-                                Отменить
+                                Cancel
                             </button>
                         </form>
                     </div>

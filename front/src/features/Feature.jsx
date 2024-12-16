@@ -103,7 +103,7 @@ const FeatureComponent = () => {
                         <h3>Response</h3>
                         <pre>{modalContent}</pre>
                         <button type="button" onClick={closeModal}>
-                            Закрыть
+                            Close
                         </button>
                     </div>
                 </div>

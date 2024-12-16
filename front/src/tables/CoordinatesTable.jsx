@@ -183,7 +183,7 @@ const CoordinatesTable = () => {
             {editingCoordinate && (
                 <div style={modalStyles.overlay}>
                     <div style={modalStyles.container}>
-                        <h3>Редактирование координат</h3>
+                        <h3>Edit Coordinates</h3>
                         <form onSubmit={(e) => e.preventDefault()}>
                             <label>
                                 X:
@@ -205,10 +205,10 @@ const CoordinatesTable = () => {
                             <br />
                             {error && <p style={{ color: 'red' }}>{error}</p>}
                             <button type="button" onClick={handleEditSubmit}>
-                                Сохранить изменения
+                                Save changes
                             </button>
                             <button type="button" onClick={() => setEditingCoordinate(null)}>
-                                Отменить
+                                Cancel
                             </button>
                         </form>
                     </div>

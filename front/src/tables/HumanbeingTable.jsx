@@ -231,7 +231,7 @@ const HumanbeingTable = () => {
             {editingHuman && (
                 <div style={modalStyles.overlay}>
                     <div style={modalStyles.container}>
-                        <h3>Редактирование Humanbeing</h3>
+                        <h3>Edit Humanbeing</h3>
                         <form onSubmit={(e) => e.preventDefault()}>
                             <label>
                                 Name:
@@ -259,14 +259,14 @@ const HumanbeingTable = () => {
                                     value="true"
                                     checked={editingHuman.realHero === true}
                                     onChange={() => setEditingHuman({...editingHuman, realHero: true})}
-                                /> Да
+                                /> Yes
                                 <input
                                     type="radio"
                                     name="realHero"
                                     value="false"
                                     checked={editingHuman.realHero === false}
                                     onChange={() => setEditingHuman({...editingHuman, realHero: false})}
-                                /> Нет
+                                /> No
                             </label>
                             <br/>
                             <label>
@@ -277,14 +277,14 @@ const HumanbeingTable = () => {
                                     value="true"
                                     checked={editingHuman.hasToothpick === true}
                                     onChange={() => setEditingHuman({...editingHuman, hasToothpick: true})}
-                                /> Да
+                                /> Yes
                                 <input
                                     type="radio"
                                     name="hasToothpick"
                                     value="false"
                                     checked={editingHuman.hasToothpick === false}
                                     onChange={() => setEditingHuman({...editingHuman, hasToothpick: false})}
-                                /> Нет
+                                /> No
                             </label>
                             <br/>
                             <label>
@@ -293,7 +293,6 @@ const HumanbeingTable = () => {
                                     type="number"
                                     value={editingHuman.carId}
                                     onChange={(e) => setEditingHuman({...editingHuman, carId: e.target.value})}
-
                                 />
                             </label>
                             <br/>
@@ -330,10 +329,10 @@ const HumanbeingTable = () => {
                             <br/>
                             {error && <p style={{color: 'red'}}>{error}</p>}
                             <button type="button" onClick={handleEditSubmit}>
-                                Сохранить изменения
+                                Save changes
                             </button>
                             <button type="button" onClick={() => setEditingHuman(null)}>
-                                Отменить
+                                Cancel
                             </button>
                         </form>
                     </div>

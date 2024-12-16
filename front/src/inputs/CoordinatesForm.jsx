@@ -84,7 +84,7 @@ const CoordinatesForm = () => {
                             Submit
                         </button>
                         <button type="button" onClick={closeModal}>
-                            Закрыть
+                            Close
                         </button>
                     </div>
                 </div>
