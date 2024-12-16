@@ -120,7 +120,7 @@ public class HumanService {
                 human.getMood(),
                 human.getImpactSpeed(),
                 human.getWeaponType(),
-                human.getUser()
+                human.getUser().getId()
         );
         return humanDTO;
     }

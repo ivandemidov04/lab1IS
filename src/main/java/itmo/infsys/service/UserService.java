@@ -113,7 +113,7 @@ public class UserService {
     public JoinDTO mapJoinToJoinDTO(Join join) {
         return new JoinDTO(
                 join.getId(),
-                join.getUser()
+                join.getUser().getId()
         );
     }
 

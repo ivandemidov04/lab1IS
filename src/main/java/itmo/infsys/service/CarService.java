@@ -6,6 +6,7 @@ import itmo.infsys.domain.model.User;
 import itmo.infsys.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,14 +38,14 @@ public class CarService {
         return mapCarToCarDTO(car);
     }
 
-    public List<CarDTO> getAllCars() {
-        List<Car> cars = carRepository.findAll();
-        return mapCarsToCarDTOs(cars);
-    }
+//    public List<CarDTO> getAllCars() {
+//        List<Car> cars = carRepository.findAll();
+//        return mapCarsToCarDTOs(cars);
+//    }
 
-    public Page<Car> getPageCars(int page, int size) {
+    public Page<CarDTO> getPageCars(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return carRepository.findAll(pageable);
+        return mapCarsToCarDTOs(carRepository.findAll(pageable));
     }
 
     public CarDTO updateCar(Long id, CarDTO carDTO) {
@@ -72,16 +73,17 @@ public class CarService {
         return new CarDTO(
                 car.getId(),
                 car.getCool(),
-                car.getUser()
+                car.getUser().getId()
         );
     }
 
-    public List<CarDTO> mapCarsToCarDTOs(List<Car> cars) {
+    public Page<CarDTO> mapCarsToCarDTOs(Page<Car> carsPage) {
         List<CarDTO> carDTOs = new ArrayList<>();
-        for (Car car : cars) {
-            carDTOs.add(mapCarToCarDTO(car));
+        for (Car car : carsPage.getContent()) {
+            carDTOs.add(mapCarToCarDTO(car));  // преобразуем каждый объект Car в CarDTO
         }
-        return carDTOs;
+        return new PageImpl<>(carDTOs, carsPage.getPageable(), carsPage.getTotalElements());
     }
+
 }
 

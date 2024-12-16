@@ -75,7 +75,7 @@ public class CoordService {
                 coord.getId(),
                 coord.getX(),
                 coord.getY(),
-                coord.getUser()
+                coord.getUser().getId()
         );
     }
 

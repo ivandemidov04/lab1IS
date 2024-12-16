@@ -31,13 +31,13 @@ public class CarController {
         return new ResponseEntity<>(carService.getCarById(id), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<CarDTO>> getAllCars() {
-        return new ResponseEntity<>(carService.getAllCars(), HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<CarDTO>> getAllCars() {
+//        return new ResponseEntity<>(carService.getAllCars(), HttpStatus.OK);
+//    }
 
     @GetMapping("/page")
-    public Page<Car> getPageCars( // TODO: should be CarDTO
+    public Page<CarDTO> getPageCars( //
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return carService.getPageCars(page, size);

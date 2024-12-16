@@ -27,6 +27,7 @@ const CarTable = () => {
             }
 
             const data = await response.json();
+            console.log(data)
             setCars(data.content); // cars возвращаются в свойстве content
             setTotalPages(data.totalPages); // totalPages возвращаются в свойстве totalPages
         } catch (error) {
@@ -150,7 +151,7 @@ const CarTable = () => {
                         <tr key={car.id}>
                             <td>{car.id}</td>
                             <td>{car.cool ? 'Да' : 'Нет'}</td>
-                            <td>{car.user.id}</td>
+                            <td>{car.userId}</td>
                             <td>
                                 <button onClick={() => fetchCarDetails(car.id)}>Редактировать</button>
                             </td>

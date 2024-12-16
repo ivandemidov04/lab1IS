@@ -12,5 +12,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class JoinDTO {
     private Long id;
-    private User user;
+    private Long userId;
 }

@@ -1,50 +1,18 @@
 package itmo.infsys.domain.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "coords")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Coord {
-    public Coord() {}
-
-    public Coord(Double x, Long y, User user) {
-        this.x = x;
-        this.y = y;
-        this.user = user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Double getX() {
-        return x;
-    }
-
-    public void setX(Double x) {
-        this.x = x;
-    }
-
-    public Long getY() {
-        return y;
-    }
-
-    public void setY(Long y) {
-        this.y = y;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Id
     @Column(name = "coords_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,5 +27,11 @@ public class Coord {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Coord(Double x, Long y, User user) {
+        this.x = x;
+        this.y = y;
+        this.user = user;
+    }
 }
 

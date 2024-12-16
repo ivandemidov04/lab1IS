@@ -1,41 +1,18 @@
 package itmo.infsys.domain.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "cars")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Car {
-    public Car() {}
-
-    public Car(Boolean cool, User user) {
-        this.cool = cool;
-        this.user = user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Boolean getCool() {
-        return cool;
-    }
-
-    public void setCool(Boolean cool) {
-        this.cool = cool;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Id
     @Column(name = "cars_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,4 +24,9 @@ public class Car {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Car(Boolean cool, User user) {
+        this.cool = cool;
+        this.user = user;
+    }
 }
