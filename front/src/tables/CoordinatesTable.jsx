@@ -27,7 +27,7 @@ const CoordinatesTable = () => {
             }
 
             const data = await response.json();
-            console.log(data)
+            // console.log(data)
             setCoordinates(data.content); // координаты возвращаются в свойстве content
             setTotalPages(data.totalPages); // totalPages возвращаются в свойстве totalPages
         } catch (error) {

@@ -32,13 +32,8 @@ public class HumanController {
         return new ResponseEntity<>(humanService.getHumanById(id), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<HumanDTO>> getAllHumans() {
-        return new ResponseEntity<>(humanService.getAllHumans(), HttpStatus.OK);
-    }
-
     @GetMapping("/page")
-    public Page<Human> getPageHumans( // TODO: should be CarDTO
+    public Page<HumanDTO> getPageHumans(
                                       @RequestParam(defaultValue = "0") int page,
                                       @RequestParam(defaultValue = "10") int size) {
         return humanService.getPageHumans(page, size);

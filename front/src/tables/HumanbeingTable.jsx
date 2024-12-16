@@ -30,6 +30,7 @@ const HumanbeingTable = () => {
             }
 
             const data = await response.json();
+            // console.log(data)
             setHumanbeings(data.content); // Данные возвращаются в свойстве content
             setTotalPages(data.totalPages); // Общее количество страниц
         } catch (error) {
@@ -194,14 +195,14 @@ const HumanbeingTable = () => {
                         <tr key={human.id}>
                             <td>{human.id}</td>
                             <td>{human.name}</td>
-                            <td>{human.coord.id}</td>
+                            <td>{human.coordId}</td>
                             <td>{human.realHero ? 'Да' : 'Нет'}</td>
                             <td>{human.hasToothpick ? 'Да' : 'Нет'}</td>
-                            <td>{human.car.id}</td>
+                            <td>{human.carId}</td>
                             <td>{human.mood}</td>
                             <td>{human.impactSpeed}</td>
                             <td>{human.weaponType}</td>
-                            <td>{human.user.id}</td>
+                            <td>{human.userId}</td>
                             <td>
                                 <button onClick={() => fetchHumanDetails(human.id)}>Редактировать</button>
                             </td>

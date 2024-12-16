@@ -10,6 +10,7 @@ import itmo.infsys.repository.CoordRepository;
 import itmo.infsys.repository.HumanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -61,16 +62,13 @@ public class HumanService {
     public HumanDTO getHumanById(Long id) {
         Human human = humanRepository.findById(id).get();
         return mapHumanToHumanDTO(human);
-    }
+    }//TODO: exceptionHandler + good messages about errors (back + front)
+     //TODO: убрать смесь английского и русского на фронтенде (и нейминги тоже должны быть в одном стиле, везде Human)
+    //TODO: доп фичи по условию (там 6 функций)
 
-    public List<HumanDTO> getAllHumans() {
-        List<Human> humans = humanRepository.findAll();
-        return mapHumansToHumanDTOs(humans);
-    }
-
-    public Page<Human> getPageHumans(int page, int size) {
+    public Page<HumanDTO> getPageHumans(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return humanRepository.findAll(pageable);
+        return mapHumansToHumanDTOs(humanRepository.findAll(pageable));
     }
 
     public HumanDTO updateHuman(Long id, HumanDTO humanDTO) {
@@ -125,12 +123,12 @@ public class HumanService {
         return humanDTO;
     }
 
-    public List<HumanDTO> mapHumansToHumanDTOs(List<Human> humans) {
+    public Page<HumanDTO> mapHumansToHumanDTOs(Page<Human> humansPage) {
         List<HumanDTO> humansDTOs = new ArrayList<>();
-        for (Human human : humans) {
+        for (Human human : humansPage.getContent()) {
             humansDTOs.add(mapHumanToHumanDTO(human));
         }
-        return humansDTOs;
+        return new PageImpl<>(humansDTOs, humansPage.getPageable(), humansPage.getTotalElements());
     }
 }
 

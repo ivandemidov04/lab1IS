@@ -1,8 +1,6 @@
 package itmo.infsys.service;
 
-import itmo.infsys.domain.dto.CarDTO;
 import itmo.infsys.domain.dto.CoordDTO;
-import itmo.infsys.domain.model.Car;
 import itmo.infsys.domain.model.Coord;
 import itmo.infsys.domain.model.User;
 import itmo.infsys.repository.CoordRepository;
