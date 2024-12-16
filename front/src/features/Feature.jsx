@@ -38,7 +38,7 @@ const FeatureComponent = () => {
             setModalContent(JSON.stringify(data, null, 2));
             setIsModalOpen(true);
         } catch (error) {
-            if (method !== 'GET') {
+            if (method === 'GET') {
                 alert(error.message);
             }
         }
