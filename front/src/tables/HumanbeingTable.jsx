@@ -186,8 +186,8 @@ const HumanbeingTable = () => {
                         <th>impactSpeed</th>
                         <th>weaponType</th>
                         <th>User ID</th>
-                        <th>Редактировать</th>
-                        <th>Удалить</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -196,18 +196,18 @@ const HumanbeingTable = () => {
                             <td>{human.id}</td>
                             <td>{human.name}</td>
                             <td>{human.coordId}</td>
-                            <td>{human.realHero ? 'Да' : 'Нет'}</td>
-                            <td>{human.hasToothpick ? 'Да' : 'Нет'}</td>
+                            <td>{human.realHero ? 'Yes' : 'No'}</td>
+                            <td>{human.hasToothpick ? 'Yes' : 'No'}</td>
                             <td>{human.carId}</td>
                             <td>{human.mood}</td>
                             <td>{human.impactSpeed}</td>
                             <td>{human.weaponType}</td>
                             <td>{human.userId}</td>
                             <td>
-                                <button onClick={() => fetchHumanDetails(human.id)}>Редактировать</button>
+                                <button onClick={() => fetchHumanDetails(human.id)}>Edit</button>
                             </td>
                             <td>
-                                <button onClick={() => handleDelete(human.id)}>Удалить</button>
+                                <button onClick={() => handleDelete(human.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -217,13 +217,13 @@ const HumanbeingTable = () => {
 
             <div>
                 <button onClick={handlePrev} disabled={currentPage === 0}>
-                    Назад
+                    Backward
                 </button>
                 <span>
-                    Страница {currentPage + 1} из {totalPages}
+                    Page {currentPage + 1} of {totalPages}
                 </span>
                 <button onClick={handleNext} disabled={currentPage === totalPages - 1}>
-                    Вперёд
+                    Forward
                 </button>
             </div>
 

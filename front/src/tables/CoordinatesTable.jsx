@@ -144,8 +144,8 @@ const CoordinatesTable = () => {
                         <th>X</th>
                         <th>Y</th>
                         <th>User ID</th>
-                        <th>Редактировать</th>
-                        <th>Удалить</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -156,10 +156,10 @@ const CoordinatesTable = () => {
                             <td>{coord.y}</td>
                             <td>{coord.userId}</td>
                             <td>
-                                <button onClick={() => fetchCoordinateDetails(coord.id)}>Редактировать</button>
+                                <button onClick={() => fetchCoordinateDetails(coord.id)}>Edit</button>
                             </td>
                             <td>
-                                <button onClick={() => handleDelete(coord.id)}>Удалить</button>
+                                <button onClick={() => handleDelete(coord.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -169,13 +169,13 @@ const CoordinatesTable = () => {
 
             <div>
                 <button onClick={handlePrev} disabled={currentPage === 0}>
-                    Назад
+                    Backward
                 </button>
                 <span>
-                    Страница {currentPage + 1} из {totalPages}
+                    Page {currentPage + 1} of {totalPages}
                 </span>
                 <button onClick={handleNext} disabled={currentPage === totalPages - 1}>
-                    Вперёд
+                    Forward
                 </button>
             </div>
 

@@ -52,7 +52,7 @@ const CarForm = () => {
 
     return (
         <div>
-            <button onClick={openModal}>Создать машину</button>
+            <button onClick={openModal}>Create car</button>
 
             {/* Modal structure */}
             {isModalOpen && (

@@ -84,7 +84,7 @@ const HumanbeingForm = () => {
 
     return (
         <div>
-            <button onClick={openModal}>Создать человека</button>
+            <button onClick={openModal}>Create human</button>
 
             {/* Modal structure */}
             {isModalOpen && (

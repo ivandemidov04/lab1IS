@@ -106,8 +106,8 @@ const AdminPanel = () => {
                     <tr>
                         <th>ID</th>
                         <th>User ID</th>
-                        <th>Принять</th>
-                        <th>Отказать</th>
+                        <th>Accept</th>
+                        <th>Reject</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -116,10 +116,10 @@ const AdminPanel = () => {
                             <td>{user.id}</td>
                             <td>{user.userId}</td>
                             <td>
-                                <button onClick={() => handleAccept(user.id)}>Принять</button>
+                                <button onClick={() => handleAccept(user.id)}>Accept</button>
                             </td>
                             <td>
-                                <button onClick={() => handleReject(user.id)}>Отказать</button>
+                                <button onClick={() => handleReject(user.id)}>Reject</button>
                             </td>
                         </tr>
                     ))}
@@ -129,13 +129,13 @@ const AdminPanel = () => {
 
             <div>
                 <button onClick={handlePrev} disabled={currentPage === 0}>
-                    Назад
+                    Backward
                 </button>
                 <span>
-                    Страница {currentPage + 1} из {totalPages}
+                    Page {currentPage + 1} of {totalPages}
                 </span>
                 <button onClick={handleNext} disabled={currentPage === totalPages - 1}>
-                    Вперёд
+                    Forward
                 </button>
             </div>
         </div>

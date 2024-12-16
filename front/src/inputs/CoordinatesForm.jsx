@@ -62,7 +62,7 @@ const CoordinatesForm = () => {
 
     return (
         <div>
-            <button onClick={openModal}>Создать координату</button>
+            <button onClick={openModal}>Create coordinates</button>
 
             {/* Modal structure */}
             {isModalOpen && (

@@ -142,21 +142,21 @@ const CarTable = () => {
                         <th>ID</th>
                         <th>Cool</th>
                         <th>User ID</th>
-                        <th>Редактировать</th>
-                        <th>Удалить</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody>
                     {cars.map((car) => (
                         <tr key={car.id}>
                             <td>{car.id}</td>
-                            <td>{car.cool ? 'Да' : 'Нет'}</td>
+                            <td>{car.cool ? 'Yes' : 'No'}</td>
                             <td>{car.userId}</td>
                             <td>
-                                <button onClick={() => fetchCarDetails(car.id)}>Редактировать</button>
+                                <button onClick={() => fetchCarDetails(car.id)}>Edit</button>
                             </td>
                             <td>
-                                <button onClick={() => handleDelete(car.id)}>Удалить</button>
+                                <button onClick={() => handleDelete(car.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -166,13 +166,13 @@ const CarTable = () => {
 
             <div>
                 <button onClick={handlePrev} disabled={currentPage === 0}>
-                    Назад
+                    Backward
                 </button>
                 <span>
-          Страница {currentPage + 1} из {totalPages}
+          Page {currentPage + 1} of {totalPages}
         </span>
                 <button onClick={handleNext} disabled={currentPage === totalPages - 1}>
-                    Вперёд
+                    Forward
                 </button>
             </div>
 

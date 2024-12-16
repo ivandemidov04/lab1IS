@@ -65,24 +65,24 @@ function Home() {
             {/* Хедер */}
             <header>
                 <div>
-                    <span>Добро пожаловать, {username}!</span>
+                    <span>Welcome, {username}!</span>
                 </div>
                 <div>
                     <button onClick={handleLogout}>Logout</button>
-                    <button onClick={handleBecomeAdmin}>Стать администратором</button>
-                    <button onClick={handleGoToAdminPanel}>Перейти в панель админа</button>
+                    <button onClick={handleBecomeAdmin}>Become an admin</button>
+                    <button onClick={handleGoToAdminPanel}>Go to admin panel</button>
                 </div>
             </header>
 
-            <h2>Список Car</h2>
+            <h2>Cars</h2>
             <CarForm/>
             <CarTable/>
 
-            <h2>Список Coordinates</h2>
+            <h2>Coordinates</h2>
             <CoordinatesForm/>
             <CoordinatesTable/>
 
-            <h2>Список Humanbeing</h2>
+            <h2>Humanbeings</h2>
             <HumanbeingForm/>
             <HumanbeingTable/>
 
