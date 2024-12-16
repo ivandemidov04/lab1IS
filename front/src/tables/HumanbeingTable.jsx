@@ -69,11 +69,30 @@ const HumanbeingTable = () => {
 
     // Функция для отправки изменений на сервер
     const handleEditSubmit = async () => {
-        // editingHuman.coordId = editingHuman.coord.id
-        // editingHuman.carId = editingHuman.car.id
-        if (!editingHuman || !editingHuman.name || !editingHuman.coordId || !editingHuman.carId) {
+        if (!editingHuman.name || !editingHuman.coordId || !editingHuman.carId || !editingHuman.mood
+            || !editingHuman.impactSpeed || !editingHuman.weaponType || editingHuman.realHero === null
+            || editingHuman.hasToothpick === null) {
             setError('Все поля обязательны для заполнения');
-            console.log(editingHuman)
+            return;
+        }
+        if (!/^\d{1,9}$/.test(editingHuman.coordId) || editingHuman.coordId.length > 9) {
+            setError('Значение "coord_id" должно быть числом не более 9 знаков');
+            return;
+        }
+        if (!/^\d{1,9}$/.test(editingHuman.carId) || editingHuman.carId.length > 9) {
+            setError('Значение "car_id" должно быть числом не более 9 знаков');
+            return;
+        }
+        if (!/^\d+(\.\d{1,6})?$/.test(editingHuman.impactSpeed) || parseFloat(editingHuman.impactSpeed) > 29.0) {
+            setError('Значение "impactSpeed" должно быть числом с максимум 6 знаками после запятой и не превышать 29.0');
+            return;
+        }
+        if (!Object.values(MoodEnum).includes(editingHuman.mood)) {
+            setError('Выберите правильное значение для "mood"');
+            return;
+        }
+        if (!Object.values(WeaponTypeEnum).includes(editingHuman.weaponType)) {
+            setError('Выберите правильное значение для "weaponType"');
             return;
         }
 
@@ -90,7 +109,7 @@ const HumanbeingTable = () => {
         data.mood = editingHuman.mood
         data.impactSpeed = editingHuman.impactSpeed
         data.weaponType = editingHuman.weaponType
-        console.log(JSON.stringify(data))
+        // console.log(JSON.stringify(data))
 
         try {
             const response = await fetch(`http://localhost:8080/api/human/${editingHuman.id}`, {
@@ -150,8 +169,6 @@ const HumanbeingTable = () => {
 
     return (
         <div>
-            {/*<h2>Список Humanbeing</h2>*/}
-
             {loading ? (
                 <p>Загрузка...</p>
             ) : (
@@ -227,7 +244,7 @@ const HumanbeingTable = () => {
                             <label>
                                 Coordinates ID:
                                 <input
-                                    type="text"
+                                    type="number"
                                     value={editingHuman.coordId}
                                     onChange={(e) => setEditingHuman({...editingHuman, coordId: e.target.value})}
                                 />
@@ -272,22 +289,13 @@ const HumanbeingTable = () => {
                             <label>
                                 Car ID:
                                 <input
-                                    type="text"
+                                    type="number"
                                     value={editingHuman.carId}
                                     onChange={(e) => setEditingHuman({...editingHuman, carId: e.target.value})}
 
                                 />
                             </label>
                             <br/>
-                            {/*<label>*/}
-                            {/*    Mood:*/}
-                            {/*    <input*/}
-                            {/*        type="text"*/}
-                            {/*        value={editingHuman.mood}*/}
-                            {/*        onChange={(e) => setEditingHuman({...editingHuman, mood: e.target.value})}*/}
-                            {/*    />*/}
-                            {/*</label>*/}
-                            {/*<br/>*/}
                             <label>
                                 Mood:
                                 <select value={editingHuman.mood} onChange={(e) => setEditingHuman({...editingHuman, mood: e.target.value})}>
@@ -300,21 +308,12 @@ const HumanbeingTable = () => {
                             <label>
                                 impactSpeed:
                                 <input
-                                    type="text"
+                                    type="number"
                                     value={editingHuman.impactSpeed}
                                     onChange={(e) => setEditingHuman({...editingHuman, impactSpeed: e.target.value})}
                                 />
                             </label>
                             <br/>
-                            {/*<label>*/}
-                            {/*    weaponType:*/}
-                            {/*    <input*/}
-                            {/*        type="text"*/}
-                            {/*        value={editingHuman.weaponType}*/}
-                            {/*        onChange={(e) => setEditingHuman({...editingHuman, weaponType: e.target.value})}*/}
-                            {/*    />*/}
-                            {/*</label>*/}
-                            {/*<br/>*/}
                             <label>
                                 Weapon Type:
                                 <select value={editingHuman.weaponType} onChange={(e) => setEditingHuman({

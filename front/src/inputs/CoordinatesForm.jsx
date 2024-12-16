@@ -71,12 +71,12 @@ const CoordinatesForm = () => {
                         <h3>Coordinates Form</h3>
                         <label>
                             X:
-                            <input type="text" value={x} onChange={(e) => setX(e.target.value)} />
+                            <input type="number" value={x} onChange={(e) => setX(e.target.value)} />
                         </label>
                         <br />
                         <label>
                             Y:
-                            <input type="text" value={y} onChange={(e) => setY(e.target.value)} />
+                            <input type="number" value={y} onChange={(e) => setY(e.target.value)} />
                         </label>
                         <br />
                         {error && <p style={{ color: 'red' }}>{error}</p>}

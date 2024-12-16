@@ -34,7 +34,6 @@ const CarForm = () => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
-            // alert('Данные успешно отправлены');
             setIsModalOpen(false); // Close the modal on success
         } catch (error) {
             alert(error.message);

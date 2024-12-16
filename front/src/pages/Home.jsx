@@ -20,7 +20,7 @@ function Home() {
         return decodedToken?.role || null;  // Возвращаем роль
     };
 
-    const role = getRoleFromToken();  // Получаем роль из токена
+    const role = getRoleFromToken();
 
     // Логика выхода
     const handleLogout = () => {
@@ -54,7 +54,6 @@ function Home() {
             alert('Только пользователь с ролью "Admin" может перейти в панель администратора.');
             return;
         }
-        // TODO:
         navigate('/home/admin-panel');  // Переход на панель админа в том же окне
     };
 
@@ -72,9 +71,6 @@ function Home() {
                 </div>
             </header>
 
-            <h2>Home Page</h2>
-
-            {/* Форма и таблицы */}
             <h2>Список Car</h2>
             <CarForm/>
             <CarTable/>

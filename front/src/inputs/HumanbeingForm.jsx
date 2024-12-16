@@ -5,33 +5,23 @@ const WeaponTypeEnum = { AXE: 'AXE', PISTOL: 'PISTOL', SHOTGUN: 'SHOTGUN', KNIFE
 
 const HumanbeingForm = () => {
     const [name, setName] = useState('');
-    const [coordinatesId, setCoordinatesId] = useState('');
+    const [coordId, setCoordId] = useState('');
     const [realHero, setRealHero] = useState(null);
     const [hasToothpick, setHasToothpick] = useState(null);
     const [carId, setCarId] = useState('');
-    const [mood, setMood] = useState('');
+    const [mood, setMood] = useState(MoodEnum.SADNESS);
     const [impactSpeed, setImpactSpeed] = useState('');
-    const [weaponType, setWeaponType] = useState('');
+    const [weaponType, setWeaponType] = useState(WeaponTypeEnum.AXE);
     const [error, setError] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
 
     const handleSubmit = async () => {
-        // const data = { name, coordinatesId, realHero, hasToothpick, carId, mood, impactSpeed, weaponType };
-        // let coord = {}, car = {};
-        // coord.id = coordinatesId
-        // car.id = carId
-        // const dataaa = {coordcoord.id, car.id}
-        // if (!mood) {
-        //     mood = MoodEnum.SADNESS
-        // }
-        // TODO: значение по умолчанию mood
-        if (!name || !coordinatesId || !carId || !mood || !impactSpeed || !weaponType || realHero === null || hasToothpick === null) {
+        if (!name || !coordId || !carId || !mood || !impactSpeed || !weaponType || realHero === null || hasToothpick === null) {
             setError('Все поля обязательны для заполнения');
-            // console.log(data)
             return;
         }
-        if (!/^\d{1,9}$/.test(coordinatesId) || coordinatesId.length > 9) {
-            setError('Значение "coordinates_id" должно быть числом не более 9 знаков');
+        if (!/^\d{1,9}$/.test(coordId) || coordId.length > 9) {
+            setError('Значение "coord_id" должно быть числом не более 9 знаков');
             return;
         }
         if (!/^\d{1,9}$/.test(carId) || carId.length > 9) {
@@ -51,7 +41,6 @@ const HumanbeingForm = () => {
             return;
         }
         setError('');
-        const coordId = coordinatesId
         const data = { name, coordId, realHero, hasToothpick, carId, mood, impactSpeed, weaponType };
 
         // Получаем токен из localStorage
@@ -61,13 +50,13 @@ const HumanbeingForm = () => {
             return;
         }
 
-        console.log(JSON.stringify(data))
+        // console.log(JSON.stringify(data))
         try {
             const response = await fetch('http://localhost:8080/api/human', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, // Добавляем токен в заголовки
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(data),
             });
@@ -109,7 +98,7 @@ const HumanbeingForm = () => {
                         <br />
                         <label>
                             Coordinates ID:
-                            <input type="text" value={coordinatesId} onChange={(e) => setCoordinatesId(e.target.value)} />
+                            <input type="number" value={coordId} onChange={(e) => setCoordId(e.target.value)} />
                         </label>
                         <br />
                         <label>
@@ -126,7 +115,7 @@ const HumanbeingForm = () => {
                         <br />
                         <label>
                             Car ID:
-                            <input type="text" value={carId} onChange={(e) => setCarId(e.target.value)} />
+                            <input type="number" value={carId} onChange={(e) => setCarId(e.target.value)} />
                         </label>
                         <br />
                         <label>
@@ -140,7 +129,7 @@ const HumanbeingForm = () => {
                         <br />
                         <label>
                             Impact Speed:
-                            <input type="text" value={impactSpeed} onChange={(e) => setImpactSpeed(e.target.value)} />
+                            <input type="number" value={impactSpeed} onChange={(e) => setImpactSpeed(e.target.value)} />
                         </label>
                         <br />
                         <label>

@@ -133,8 +133,6 @@ const CoordinatesTable = () => {
 
     return (
         <div>
-            {/*<h2>Список координат</h2>*/}
-
             {loading ? (
                 <p>Загрузка...</p>
             ) : (
@@ -189,7 +187,7 @@ const CoordinatesTable = () => {
                             <label>
                                 X:
                                 <input
-                                    type="text"
+                                    type="number"
                                     value={editingCoordinate.x}
                                     onChange={(e) => setEditingCoordinate({ ...editingCoordinate, x: e.target.value })}
                                 />
@@ -198,7 +196,7 @@ const CoordinatesTable = () => {
                             <label>
                                 Y:
                                 <input
-                                    type="text"
+                                    type="number"
                                     value={editingCoordinate.y}
                                     onChange={(e) => setEditingCoordinate({ ...editingCoordinate, y: e.target.value })}
                                 />
