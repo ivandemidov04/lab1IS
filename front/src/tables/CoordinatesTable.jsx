@@ -27,6 +27,7 @@ const CoordinatesTable = () => {
             }
 
             const data = await response.json();
+            console.log(data)
             setCoordinates(data.content); // координаты возвращаются в свойстве content
             setTotalPages(data.totalPages); // totalPages возвращаются в свойстве totalPages
         } catch (error) {
@@ -153,7 +154,7 @@ const CoordinatesTable = () => {
                             <td>{coord.id}</td>
                             <td>{coord.x}</td>
                             <td>{coord.y}</td>
-                            <td>{coord.user.id}</td>
+                            <td>{coord.userId}</td>
                             <td>
                                 <button onClick={() => fetchCoordinateDetails(coord.id)}>Редактировать</button>
                             </td>

@@ -34,13 +34,8 @@ public class CoordController {
         return new ResponseEntity<>(coordService.getCoordById(id), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<CoordDTO>> getAllCoords() {
-        return new ResponseEntity<>(coordService.getAllCoords(), HttpStatus.OK);
-    }
-
     @GetMapping("/page")
-    public Page<Coord> getPageCoords( // TODO: should be CarDTO
+    public Page<CoordDTO> getPageCoords(
                                     @RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size) {
         return coordService.getPageCoords(page, size);

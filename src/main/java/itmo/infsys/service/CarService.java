@@ -38,11 +38,6 @@ public class CarService {
         return mapCarToCarDTO(car);
     }
 
-//    public List<CarDTO> getAllCars() {
-//        List<Car> cars = carRepository.findAll();
-//        return mapCarsToCarDTOs(cars);
-//    }
-
     public Page<CarDTO> getPageCars(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return mapCarsToCarDTOs(carRepository.findAll(pageable));
@@ -80,10 +75,8 @@ public class CarService {
     public Page<CarDTO> mapCarsToCarDTOs(Page<Car> carsPage) {
         List<CarDTO> carDTOs = new ArrayList<>();
         for (Car car : carsPage.getContent()) {
-            carDTOs.add(mapCarToCarDTO(car));  // преобразуем каждый объект Car в CarDTO
+            carDTOs.add(mapCarToCarDTO(car));
         }
         return new PageImpl<>(carDTOs, carsPage.getPageable(), carsPage.getTotalElements());
     }
-
 }
-

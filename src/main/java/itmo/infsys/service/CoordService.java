@@ -1,5 +1,6 @@
 package itmo.infsys.service;
 
+import itmo.infsys.domain.dto.CarDTO;
 import itmo.infsys.domain.dto.CoordDTO;
 import itmo.infsys.domain.model.Car;
 import itmo.infsys.domain.model.Coord;
@@ -7,6 +8,7 @@ import itmo.infsys.domain.model.User;
 import itmo.infsys.repository.CoordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,14 +40,9 @@ public class CoordService {
         return mapCoordToCoordDTO(coord);
     }
 
-    public List<CoordDTO> getAllCoords() {
-        List<Coord> coords = coordRepository.findAll();
-        return mapCoordsToCoordDTOs(coords);
-    }
-
-    public Page<Coord> getPageCoords(int page, int size) {
+    public Page<CoordDTO> getPageCoords(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return coordRepository.findAll(pageable);
+        return mapCoordsToCoordDTOs(coordRepository.findAll(pageable));
     }
 
     public CoordDTO updateCoord(Long id, CoordDTO coordDTO) {
@@ -79,12 +76,11 @@ public class CoordService {
         );
     }
 
-    public List<CoordDTO> mapCoordsToCoordDTOs (List<Coord> coords) {
+    public Page<CoordDTO> mapCoordsToCoordDTOs(Page<Coord> coordsPage) {
         List<CoordDTO> coordDTOs = new ArrayList<>();
-        for (Coord coord : coords) {
+        for (Coord coord : coordsPage.getContent()) {
             coordDTOs.add(mapCoordToCoordDTO(coord));
         }
-        return coordDTOs;
+        return new PageImpl<>(coordDTOs, coordsPage.getPageable(), coordsPage.getTotalElements());
     }
 }
-
