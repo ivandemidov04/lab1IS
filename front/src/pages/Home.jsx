@@ -30,13 +30,15 @@ function Home() {
 
     // Логика становления админом
     const handleBecomeAdmin = async () => {
+        // console.log(role)
+
         if (role !== 'ROLE_USER') {
             alert('Только пользователь с ролью "User" может стать администратором.');
             return;
         }
 
         try {
-            await fetch('http://localhost:8080/api/admin-panel/get-admin', {
+            await fetch('http://localhost:8080/api/admin-panel/join', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

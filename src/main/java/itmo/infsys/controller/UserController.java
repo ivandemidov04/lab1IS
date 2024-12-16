@@ -2,9 +2,9 @@ package itmo.infsys.controller;
 
 import itmo.infsys.domain.dto.JoinDTO;
 import itmo.infsys.domain.dto.UserDTO;
-import itmo.infsys.domain.model.Role;
 import itmo.infsys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,25 +28,21 @@ public class UserController {
         return new ResponseEntity<>(userService.createJoin(), HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-admin")
-    @PreAuthorize("hasRole('USER')")
-    public void getAdmin() {
-        userService.getAdmin();
-    }
-
     @GetMapping("users")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("joins")
+    @GetMapping("page")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<JoinDTO>> getAllJoins() {
-        return new ResponseEntity<>(userService.getAllJoins(), HttpStatus.OK);
+    public Page<JoinDTO> getPageJoins(
+                                     @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "10") int size) {
+        return userService.getPageJoins(page, size);
     }
 
-    @PostMapping("{id}")//join id
+    @PutMapping("{id}")//join id
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> approveJoin(@PathVariable Long id) {
         return new ResponseEntity<>(userService.approveJoin(id), HttpStatus.OK);

@@ -5,6 +5,10 @@ import itmo.infsys.domain.dto.UserDTO;
 import itmo.infsys.domain.model.Join;
 import itmo.infsys.repository.JoinRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -87,9 +91,9 @@ public class UserService {
         return mapUsersToUserDTOs(users);
     }
 
-    public List<JoinDTO> getAllJoins() {
-        List<Join> joins = joinRepository.findAll();
-        return mapJoinsToJoinDTOs(joins);
+    public Page<JoinDTO> getPageJoins(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return mapJoinsToJoinDTOs(joinRepository.findAll(pageable));
     }
 
     public UserDTO mapUserToUserDTO(User user) {
@@ -117,11 +121,11 @@ public class UserService {
         );
     }
 
-    public List<JoinDTO> mapJoinsToJoinDTOs(List<Join> joins) {
+    public Page<JoinDTO> mapJoinsToJoinDTOs(Page<Join> joinsPage) {
         List<JoinDTO> joinDTOs = new ArrayList<>();
-        for (Join join : joins) {
+        for (Join join : joinsPage.getContent()) {
             joinDTOs.add(mapJoinToJoinDTO(join));
         }
-        return joinDTOs;
+        return new PageImpl<>(joinDTOs, joinsPage.getPageable(), joinsPage.getTotalElements());
     }
 }
