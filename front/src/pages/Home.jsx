@@ -6,6 +6,7 @@ import HumanbeingForm from '../inputs/HumanbeingForm';
 import CarTable from "../tables/CarTable";
 import CoordinatesTable from "../tables/CoordinatesTable";
 import HumanbeingTable from "../tables/HumanbeingTable";
+import Feature from "../features/Feature.jsx";
 
 function Home() {
     const location = useLocation();
@@ -84,6 +85,8 @@ function Home() {
             <h2>Список Humanbeing</h2>
             <HumanbeingForm/>
             <HumanbeingTable/>
+
+            <Feature/>
         </div>
     );
 }
