@@ -5,6 +5,9 @@ import itmo.infsys.domain.model.Car;
 import itmo.infsys.domain.model.User;
 import itmo.infsys.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +40,11 @@ public class CarService {
     public List<CarDTO> getAllCars() {
         List<Car> cars = carRepository.findAll();
         return mapCarsToCarDTOs(cars);
+    }
+
+    public Page<Car> getPageCars(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return carRepository.findAll(pageable);
     }
 
     public CarDTO updateCar(Long id, CarDTO carDTO) {

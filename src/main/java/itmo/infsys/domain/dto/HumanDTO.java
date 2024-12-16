@@ -7,14 +7,14 @@ import java.time.LocalDateTime;
 public class HumanDTO {
     public HumanDTO() {}
 
-    public HumanDTO(Long id, String name, Coord coord, LocalDateTime creationDate, Boolean realHero, Boolean hasToothpick, Car car, Mood mood, Double impactSpeed, WeaponType weaponType, User user) {
+    public HumanDTO(Long id, String name, Long coord_id, LocalDateTime creationDate, Boolean realHero, Boolean hasToothpick, Long car_id, Mood mood, Double impactSpeed, WeaponType weaponType, User user) {
         this.id = id;
         this.name = name;
-        this.coord = coord;
+        this.coord_id = coord_id;
         this.creationDate = creationDate;
         this.realHero = realHero;
         this.hasToothpick = hasToothpick;
-        this.car = car;
+        this.car_id = car_id;
         this.mood = mood;
         this.impactSpeed = impactSpeed;
         this.weaponType = weaponType;
@@ -37,12 +37,12 @@ public class HumanDTO {
         this.name = name;
     }
 
-    public Coord getCoord() {
-        return coord;
+    public Long getCoordId() {
+        return coord_id;
     }
 
-    public void setCoord(Coord coord) {
-        this.coord = coord;
+    public void setCoordId(Long coord_id) {
+        this.coord_id = coord_id;
     }
 
     public LocalDateTime getCreationDate() {
@@ -69,12 +69,12 @@ public class HumanDTO {
         this.hasToothpick = hasToothpick;
     }
 
-    public Car getCar() {
-        return car;
+    public Long getCarId() {
+        return car_id;
     }
 
-    public void setCar(Car car) {
-        this.car = car;
+    public void setCarId(Long car_id) {
+        this.car_id = car_id;
     }
 
     public Mood getMood() {
@@ -111,11 +111,11 @@ public class HumanDTO {
 
     private Long id;
     private String name;
-    private Coord coord;
+    private Long coord_id;
     private LocalDateTime creationDate;
     private Boolean realHero;
     private Boolean hasToothpick;
-    private Car car;
+    private Long car_id;
     private Mood mood;
     private Double impactSpeed;
     private WeaponType weaponType;

@@ -1,8 +1,11 @@
 package itmo.infsys.controller;
 
 import itmo.infsys.domain.dto.HumanDTO;
+import itmo.infsys.domain.model.Coord;
+import itmo.infsys.domain.model.Human;
 import itmo.infsys.service.HumanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +35,13 @@ public class HumanController {
     @GetMapping
     public ResponseEntity<List<HumanDTO>> getAllHumans() {
         return new ResponseEntity<>(humanService.getAllHumans(), HttpStatus.OK);
+    }
+
+    @GetMapping("/page")
+    public Page<Human> getPageHumans( // TODO: should be CarDTO
+                                      @RequestParam(defaultValue = "0") int page,
+                                      @RequestParam(defaultValue = "10") int size) {
+        return humanService.getPageHumans(page, size);
     }
 
     @PutMapping("{id}")

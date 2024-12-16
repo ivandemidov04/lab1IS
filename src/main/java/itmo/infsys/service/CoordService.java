@@ -1,10 +1,14 @@
 package itmo.infsys.service;
 
 import itmo.infsys.domain.dto.CoordDTO;
+import itmo.infsys.domain.model.Car;
 import itmo.infsys.domain.model.Coord;
 import itmo.infsys.domain.model.User;
 import itmo.infsys.repository.CoordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +41,11 @@ public class CoordService {
     public List<CoordDTO> getAllCoords() {
         List<Coord> coords = coordRepository.findAll();
         return mapCoordsToCoordDTOs(coords);
+    }
+
+    public Page<Coord> getPageCoords(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return coordRepository.findAll(pageable);
     }
 
     public CoordDTO updateCoord(Long id, CoordDTO coordDTO) {

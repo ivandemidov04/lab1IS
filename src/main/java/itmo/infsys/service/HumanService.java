@@ -9,6 +9,9 @@ import itmo.infsys.repository.CarRepository;
 import itmo.infsys.repository.CoordRepository;
 import itmo.infsys.repository.HumanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,8 +35,8 @@ public class HumanService {
 
     public HumanDTO createHuman(HumanDTO humanDTO) {
         User user = userService.getCurrentUser();
-        Coord coord = coordRepository.findById(humanDTO.getCoord().getId()).get();
-        Car car = carRepository.findById(humanDTO.getCar().getId()).get();
+        Coord coord = coordRepository.findById(humanDTO.getCoordId()).get();
+        Car car = carRepository.findById(humanDTO.getCarId()).get();
         if (!Objects.equals(coord.getUser().getId(), user.getId())) {
             throw new RuntimeException("Coord doesn't belong to this user");
         }
@@ -65,17 +68,22 @@ public class HumanService {
         return mapHumansToHumanDTOs(humans);
     }
 
+    public Page<Human> getPageHumans(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return humanRepository.findAll(pageable);
+    }
+
     public HumanDTO updateHuman(Long id, HumanDTO humanDTO) {
         Human human = humanRepository.findById(id).orElseThrow(() -> new RuntimeException("Human not found"));
         User user = userService.getCurrentUser();
         if (!Objects.equals(human.getUser().getId(), user.getId())) {
             throw new RuntimeException("Human doesn't belong to this user");
         }
-        Coord coord = coordRepository.findById(humanDTO.getCoord().getId()).get();
+        Coord coord = coordRepository.findById(humanDTO.getCoordId()).get();
         if (!Objects.equals(coord.getUser().getId(), user.getId())) {
             throw new RuntimeException("Coord doesn't belong to this user");
         }
-        Car car = carRepository.findById(humanDTO.getCar().getId()).get();
+        Car car = carRepository.findById(humanDTO.getCarId()).get();
         if (!Objects.equals(car.getUser().getId(), user.getId())) {
             throw new RuntimeException("Car doesn't belong to this user");
         }
@@ -104,11 +112,11 @@ public class HumanService {
         HumanDTO humanDTO =  new HumanDTO(
                 human.getId(),
                 human.getName(),
-                human.getCoord(),
+                human.getCoord().getId(),
                 human.getCreationDate(),
                 human.getRealHero(),
                 human.getHasToothpick(),
-                human.getCar(),
+                human.getCar().getId(),
                 human.getMood(),
                 human.getImpactSpeed(),
                 human.getWeaponType(),

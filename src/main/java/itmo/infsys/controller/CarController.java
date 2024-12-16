@@ -1,8 +1,10 @@
 package itmo.infsys.controller;
 
 import itmo.infsys.domain.dto.CarDTO;
+import itmo.infsys.domain.model.Car;
 import itmo.infsys.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +34,13 @@ public class CarController {
     @GetMapping
     public ResponseEntity<List<CarDTO>> getAllCars() {
         return new ResponseEntity<>(carService.getAllCars(), HttpStatus.OK);
+    }
+
+    @GetMapping("/page")
+    public Page<Car> getPageCars( // TODO: should be CarDTO
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return carService.getPageCars(page, size);
     }
 
     @PutMapping("{id}")
