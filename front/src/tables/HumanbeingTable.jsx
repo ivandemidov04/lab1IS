@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CoordinatesForm from "../inputs/CoordinatesForm.jsx";
-import HumanbeingForm from "../inputs/HumanbeingForm.jsx";
+import HumanbeingForm from "../inputs/HumanbeingForm";
 
 const MoodEnum = { SADNESS: 'SADNESS', CALM: 'CALM', FRENZY: 'FRENZY' };
 const WeaponTypeEnum = { AXE: 'AXE', PISTOL: 'PISTOL', SHOTGUN: 'SHOTGUN', KNIFE: 'KNIFE' };
@@ -11,7 +10,11 @@ const HumanbeingTable = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
     const [editingHuman, setEditingHuman] = useState(null);
+    const [filteredHumanbeings, setFilteredHumanbeings] = useState([]); // Для хранения отфильтрованных автомобилей
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' }); // Для сортировки
+
 
     const fetchHumanbeings = async (page) => {
         setLoading(true);
@@ -43,6 +46,44 @@ const HumanbeingTable = () => {
     useEffect(() => {
         fetchHumanbeings(currentPage);
     }, [currentPage]);
+
+    // Функция для сортировки
+    const handleSort = (column) => {
+        const direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+        setSortConfig({ key: column, direction });
+
+        const sortedHumanbeings = [...filteredHumanbeings].sort((a, b) => {
+            if (a[column] < b[column]) {
+                return direction === 'asc' ? -1 : 1;
+            }
+            if (a[column] > b[column]) {
+                return direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+        setFilteredHumanbeings(sortedHumanbeings);
+    };
+
+    useEffect(() => {
+        setFilteredHumanbeings(humanbeings); // При изменении списка машин сбрасываем фильтрацию
+    }, [humanbeings]);
+
+    // Функция для фильтрации по столбцу
+    const handleFilterName = (e) => {
+        const filterValue = e.target.value.toLowerCase();
+        const filtered = humanbeings.filter((humanbeing) =>
+            humanbeing.name.toString().toLowerCase().includes(filterValue)
+        );
+        setFilteredHumanbeings(filtered);
+    };
+
+    // const handleFilterUserId = (e) => {
+    //     const filterValue = e.target.value.toLowerCase();
+    //     const filtered = cars.filter((car) =>
+    //         car.userId.toString().toLowerCase().includes(filterValue)
+    //     );
+    //     setFilteredCars(filtered);
+    // };
 
     const fetchHumanDetails = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
@@ -163,14 +204,31 @@ const HumanbeingTable = () => {
         }
     };
 
-    const handleHumanbeingCreated = (newHumanbeing) => {
-        setHumanbeings((prevHumanbeing) => [...prevHumanbeing, newHumanbeing]);
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
     };
 
     return (
         <div>
-            <HumanbeingForm onHumanbeingCreated={handleHumanbeingCreated} /> {/* Pass the callback to the form */}
+            <button onClick={openModal}>Create human</button>
+            {isModalOpen && <HumanbeingForm setHumanbeings={setHumanbeings} closeModal={closeModal}/>}
 
+            <div>
+                <label>
+                    Filter:
+                    <input type="text" onChange={handleFilterName} placeholder="Filter by name"/>
+                </label>
+            </div>
+            {/*<div>*/}
+            {/*    <label>*/}
+            {/*        Filter:*/}
+            {/*        <input type="text" onChange={handleFilterCool} placeholder="Filter by cool"/>*/}
+            {/*    </label>*/}
+            {/*</div>*/}
 
             {loading ? (
                 <p>Загрузка...</p>
@@ -178,22 +236,22 @@ const HumanbeingTable = () => {
                 <table>
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Coordinates ID</th>
-                        <th>realHero</th>
-                        <th>hasToothpick</th>
-                        <th>Car ID</th>
-                        <th>Mood</th>
-                        <th>impactSpeed</th>
-                        <th>weaponType</th>
-                        <th>User ID</th>
+                        <th onClick={() => handleSort('id')}>ID</th>
+                        <th onClick={() => handleSort('name')}>Name</th>
+                        <th onClick={() => handleSort('coordId')}>Coordinates ID</th>
+                        <th onClick={() => handleSort('realHero')}>realHero</th>
+                        <th onClick={() => handleSort('hasToothpick')}>hasToothpick</th>
+                        <th onClick={() => handleSort('carId')}>Car ID</th>
+                        <th onClick={() => handleSort('mood')}>Mood</th>
+                        <th onClick={() => handleSort('impactSpeed')}>impactSpeed</th>
+                        <th onClick={() => handleSort('weaponType')}>weaponType</th>
+                        <th onClick={() => handleSort('userId')}>User ID</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {humanbeings.map((human) => (
+                    {filteredHumanbeings.map((human) => (
                         <tr key={human.id}>
                             <td>{human.id}</td>
                             <td>{human.name}</td>
@@ -229,7 +287,6 @@ const HumanbeingTable = () => {
                 </button>
             </div>
 
-            {/* Модальное окно для редактирования */}
             {editingHuman && (
                 <div style={modalStyles.overlay}>
                     <div style={modalStyles.container}>
@@ -300,7 +357,8 @@ const HumanbeingTable = () => {
                             <br/>
                             <label>
                                 Mood:
-                                <select value={editingHuman.mood} onChange={(e) => setEditingHuman({...editingHuman, mood: e.target.value})}>
+                                <select value={editingHuman.mood}
+                                        onChange={(e) => setEditingHuman({...editingHuman, mood: e.target.value})}>
                                     <option value={MoodEnum.SADNESS}>SADNESS</option>
                                     <option value={MoodEnum.CALM}>CALM</option>
                                     <option value={MoodEnum.FRENZY}>FRENZY</option>
