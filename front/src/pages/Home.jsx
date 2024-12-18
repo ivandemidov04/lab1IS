@@ -70,7 +70,6 @@ function Home() {
             </header>
 
             <h2>Cars</h2>
-            <CarForm/>
             <CarTable/>
 
             <h2>Coordinates</h2>

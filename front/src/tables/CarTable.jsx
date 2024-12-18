@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import CarForm from '../inputs/CarForm'; // Импортируем CarForm
 
 const CarTable = () => {
     const [cars, setCars] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [editingCar, setEditingCar] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
+    const [editingCar, setEditingCar] = useState(null); // State for editing car
     const [error, setError] = useState('');
 
     const fetchCars = async (page) => {
@@ -39,6 +41,7 @@ const CarTable = () => {
         fetchCars(currentPage);
     }, [currentPage]);
 
+    // Fetch car details for editing
     const fetchCarDetails = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -55,12 +58,13 @@ const CarTable = () => {
             }
 
             const car = await response.json();
-            setEditingCar(car);
+            setEditingCar(car); // Set car data to editing state
         } catch (error) {
             console.error('Ошибка при загрузке данных автомобиля:', error);
         }
     };
 
+    // Submit edited car details
     const handleEditSubmit = async () => {
         if (editingCar === null || editingCar.cool === null) {
             setError('Поле "cool" обязательно');
@@ -84,13 +88,14 @@ const CarTable = () => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
-            setEditingCar(null);
-            fetchCars(currentPage);
+            setEditingCar(null); // Close edit mode
+            fetchCars(currentPage); // Refresh the car list
         } catch (error) {
             alert(error.message);
         }
     };
 
+    // Delete car
     const handleDelete = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -106,12 +111,13 @@ const CarTable = () => {
                 throw new Error('Ошибка при удалении автомобиля');
             }
 
-            fetchCars(currentPage);
+            fetchCars(currentPage); // Refresh the car list after deletion
         } catch (error) {
             alert(error.message);
         }
     };
 
+    // Pagination controls
     const handleNext = () => {
         if (currentPage < totalPages - 1) {
             setCurrentPage(currentPage + 1);
@@ -124,8 +130,21 @@ const CarTable = () => {
         }
     };
 
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <div>
+            <button onClick={openModal}>Create car</button>
+
+            {/* Create car modal */}
+            {isModalOpen && <CarForm setCars={setCars} closeModal={closeModal} />}
+
             {loading ? (
                 <p>Загрузка...</p>
             ) : (
@@ -162,14 +181,14 @@ const CarTable = () => {
                     Backward
                 </button>
                 <span>
-          Page {currentPage + 1} of {totalPages}
-        </span>
+                    Page {currentPage + 1} of {totalPages}
+                </span>
                 <button onClick={handleNext} disabled={currentPage === totalPages - 1}>
                     Forward
                 </button>
             </div>
 
-            {/* Модальное окно для редактирования */}
+            {/* Edit modal */}
             {editingCar && (
                 <div style={modalStyles.overlay}>
                     <div style={modalStyles.container}>

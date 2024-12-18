@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 
-const CarForm = () => {
+const CarForm = ({ setCars, closeModal }) => {
     const [cool, setCool] = useState(null);
     const [error, setError] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
 
     const handleSubmit = async () => {
         if (cool === null) {
@@ -34,69 +33,34 @@ const CarForm = () => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
-            setIsModalOpen(false); // Close the modal on success
+            const newCar = await response.json();  // Получаем данные нового автомобиля
+
+            // Обновляем список автомобилей в родительском компоненте
+            setCars((prevCars) => [...prevCars, newCar]);
+
+            // Закрываем модальное окно
+            closeModal();
+
         } catch (error) {
             alert(error.message);
         }
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
     return (
         <div>
-            <button onClick={openModal}>Create car</button>
-
-            {/* Modal structure */}
-            {isModalOpen && (
-                <div style={modalStyles.overlay}>
-                    <div style={modalStyles.container}>
-                        <h3>Car Form</h3>
-                        <label>
-                            Cool:
-                            <input type="radio" name="cool" value="true" onChange={() => setCool(true)} /> Yes
-                            <input type="radio" name="cool" value="false" onChange={() => setCool(false)} /> No
-                        </label>
-                        <br />
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
-                        <button type="button" onClick={handleSubmit}>
-                            Submit
-                        </button>
-                        <button type="button" onClick={closeModal}>
-                            Close
-                        </button>
-                    </div>
-                </div>
-            )}
+            <h3>Car Form</h3>
+            <label>
+                Cool:
+                <input type="radio" name="cool" value="true" onChange={() => setCool(true)} /> Yes
+                <input type="radio" name="cool" value="false" onChange={() => setCool(false)} /> No
+            </label>
+            <br />
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <button type="button" onClick={handleSubmit}>
+                Submit
+            </button>
         </div>
     );
-};
-
-const modalStyles = {
-    overlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1000,
-    },
-    container: {
-        backgroundColor: 'white',
-        padding: '20px',
-        borderRadius: '5px',
-        width: '300px',
-        textAlign: 'center',
-    },
 };
 
 export default CarForm;
