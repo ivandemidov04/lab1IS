@@ -5,7 +5,6 @@ const FeatureComponent = () => {
     const [modalContent, setModalContent] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Получение JWT токена из localStorage
     const getJwtToken = () => {
         const token = localStorage.getItem('jwtToken');
         if (!token) {
@@ -67,12 +66,10 @@ const FeatureComponent = () => {
         handleApiResponse('http://localhost:8080/api/feature/make-all-sad', 'PUT');
     };
 
-    // Открытие модального окна
     const openModal = () => {
         setIsModalOpen(true);
     };
 
-    // Закрытие модального окна
     const closeModal = () => {
         setIsModalOpen(false);
     };
@@ -112,7 +109,6 @@ const FeatureComponent = () => {
     );
 };
 
-// Styles for modal
 const modalStyles = {
     overlay: {
         position: 'fixed',

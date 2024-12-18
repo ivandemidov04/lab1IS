@@ -22,7 +22,6 @@ const CoordinatesForm = () => {
         setError('');
         const data = { x, y };
 
-        // Получаем токен из localStorage
         const token = localStorage.getItem('jwtToken');
         if (!token) {
             alert('JWT токен отсутствует. Пожалуйста, войдите в систему.');
@@ -34,7 +33,7 @@ const CoordinatesForm = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, // Добавляем токен в заголовки
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(data),
             });
@@ -43,19 +42,16 @@ const CoordinatesForm = () => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
-            // alert('Данные успешно отправлены');
-            setIsModalOpen(false); // Close the modal after successful submission
+            setIsModalOpen(false);
         } catch (error) {
             alert(error.message);
         }
     };
 
-    // Function to open the modal
     const openModal = () => {
         setIsModalOpen(true);
     };
 
-    // Function to close the modal
     const closeModal = () => {
         setIsModalOpen(false);
     };
@@ -93,7 +89,6 @@ const CoordinatesForm = () => {
     );
 };
 
-// Styles for modal
 const modalStyles = {
     overlay: {
         position: 'fixed',

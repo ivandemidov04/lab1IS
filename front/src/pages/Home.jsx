@@ -14,7 +14,6 @@ function Home() {
     const username = location.state?.username || 'Guest';
     const token = localStorage.getItem('jwtToken');
 
-    // Проверяем роль из JWT токена
     const getRoleFromToken = () => {
         if (!token) return null;
         const decodedToken = JSON.parse(atob(token.split('.')[1])); // Расшифровываем токен
@@ -23,15 +22,12 @@ function Home() {
 
     const role = getRoleFromToken();
 
-    // Логика выхода
     const handleLogout = () => {
         localStorage.removeItem('jwtToken');
         navigate('/auth/sign-in');
     };
 
-    // Логика становления админом
     const handleBecomeAdmin = async () => {
-        // console.log(role)
 
         if (role !== 'ROLE_USER') {
             alert('Только пользователь с ролью "User" может стать администратором.');
@@ -51,13 +47,12 @@ function Home() {
         }
     };
 
-    // Логика перехода на панель админа
     const handleGoToAdminPanel = () => {
         if (role !== 'ROLE_ADMIN') {
             alert('Только пользователь с ролью "Admin" может перейти в панель администратора.');
             return;
         }
-        navigate('/home/admin-panel');  // Переход на панель админа в том же окне
+        navigate('/home/admin-panel');
     };
 
     return (

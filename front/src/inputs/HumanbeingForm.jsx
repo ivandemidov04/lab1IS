@@ -43,14 +43,12 @@ const HumanbeingForm = () => {
         setError('');
         const data = { name, coordId, realHero, hasToothpick, carId, mood, impactSpeed, weaponType };
 
-        // Получаем токен из localStorage
         const token = localStorage.getItem('jwtToken');
         if (!token) {
             alert('JWT токен отсутствует. Пожалуйста, войдите в систему.');
             return;
         }
 
-        // console.log(JSON.stringify(data))
         try {
             const response = await fetch('http://localhost:8080/api/human', {
                 method: 'POST',
@@ -65,19 +63,16 @@ const HumanbeingForm = () => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
-            alert('Данные успешно отправлены');
             setIsModalOpen(false); // Close modal after successful submission
         } catch (error) {
             alert(error.message);
         }
     };
 
-    // Function to open the modal
     const openModal = () => {
         setIsModalOpen(true);
     };
 
-    // Function to close the modal
     const closeModal = () => {
         setIsModalOpen(false);
     };

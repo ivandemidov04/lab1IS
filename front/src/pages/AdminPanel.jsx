@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 const AdminPanel = () => {
-    const [users, setUsers] = useState([]);  // Здесь мы будем хранить пользователей
+    const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
 
-    // Функция для загрузки данных с бэкенда
     const fetchUsers = async (page) => {
         setLoading(true);
         const jwtToken = localStorage.getItem('jwtToken'); // Получаем JWT из localStorage
@@ -25,8 +24,8 @@ const AdminPanel = () => {
             }
 
             const data = await response.json();
-            setUsers(data.content);  // users возвращаются в свойстве content
-            setTotalPages(data.totalPages);  // totalPages возвращаются в свойстве totalPages
+            setUsers(data.content);
+            setTotalPages(data.totalPages);
         } catch (error) {
             console.error('Ошибка при загрузке данных:', error);
         } finally {
@@ -34,12 +33,10 @@ const AdminPanel = () => {
         }
     };
 
-    // Загрузка данных при изменении страницы
     useEffect(() => {
         fetchUsers(currentPage);
     }, [currentPage]);
 
-    // Функция для принятия пользователя (PUT запрос)
     const handleAccept = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -55,13 +52,12 @@ const AdminPanel = () => {
                 throw new Error('Ошибка при принятии пользователя');
             }
 
-            fetchUsers(currentPage);  // Обновляем список пользователей после принятия
+            fetchUsers(currentPage);
         } catch (error) {
             alert(error.message);
         }
     };
 
-    // Функция для отклонения пользователя (DELETE запрос)
     const handleReject = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -77,13 +73,12 @@ const AdminPanel = () => {
                 throw new Error('Ошибка при отклонении пользователя');
             }
 
-            fetchUsers(currentPage);  // Обновляем список пользователей после отклонения
+            fetchUsers(currentPage);
         } catch (error) {
             alert(error.message);
         }
     };
 
-    // Обработчики для переключения страниц
     const handleNext = () => {
         if (currentPage < totalPages - 1) {
             setCurrentPage(currentPage + 1);

@@ -40,12 +40,10 @@ const CarForm = () => {
         }
     };
 
-    // Function to open the modal
     const openModal = () => {
         setIsModalOpen(true);
     };
 
-    // Function to close the modal
     const closeModal = () => {
         setIsModalOpen(false);
     };
@@ -79,7 +77,6 @@ const CarForm = () => {
     );
 };
 
-// Styles for modal
 const modalStyles = {
     overlay: {
         position: 'fixed',

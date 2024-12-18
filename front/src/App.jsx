@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-// Импортируем страницы
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';

@@ -4,14 +4,13 @@ const MoodEnum = { SADNESS: 'SADNESS', CALM: 'CALM', FRENZY: 'FRENZY' };
 const WeaponTypeEnum = { AXE: 'AXE', PISTOL: 'PISTOL', SHOTGUN: 'SHOTGUN', KNIFE: 'KNIFE' };
 
 const HumanbeingTable = () => {
-    const [humanbeings, setHumanbeings] = useState([]); // Для хранения списка
+    const [humanbeings, setHumanbeings] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [editingHuman, setEditingHuman] = useState(null); // Для редактирования
+    const [editingHuman, setEditingHuman] = useState(null);
 
-    // Функция для загрузки данных с бэкенда
     const fetchHumanbeings = async (page) => {
         setLoading(true);
         const jwtToken = localStorage.getItem('jwtToken');
@@ -30,9 +29,8 @@ const HumanbeingTable = () => {
             }
 
             const data = await response.json();
-            // console.log(data)
-            setHumanbeings(data.content); // Данные возвращаются в свойстве content
-            setTotalPages(data.totalPages); // Общее количество страниц
+            setHumanbeings(data.content);
+            setTotalPages(data.totalPages);
         } catch (error) {
             console.error('Ошибка при загрузке данных:', error);
         } finally {
@@ -40,12 +38,10 @@ const HumanbeingTable = () => {
         }
     };
 
-    // Загрузка данных при изменении страницы
     useEffect(() => {
         fetchHumanbeings(currentPage);
     }, [currentPage]);
 
-    // Функция для получения данных для редактирования
     const fetchHumanDetails = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -68,7 +64,6 @@ const HumanbeingTable = () => {
         }
     };
 
-    // Функция для отправки изменений на сервер
     const handleEditSubmit = async () => {
         if (!editingHuman.name || !editingHuman.coordId || !editingHuman.carId || !editingHuman.mood
             || !editingHuman.impactSpeed || !editingHuman.weaponType || editingHuman.realHero === null
@@ -100,7 +95,6 @@ const HumanbeingTable = () => {
         setError('');
         const jwtToken = localStorage.getItem('jwtToken');
 
-        // console.log(JSON.stringify(editingHuman.name))
         const data = {}
         data.name = editingHuman.name
         data.coordId = editingHuman.coordId

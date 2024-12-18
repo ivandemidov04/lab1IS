@@ -62,10 +62,7 @@ public class HumanService {
     public HumanDTO getHumanById(Long id) {
         Human human = humanRepository.findById(id).get();
         return mapHumanToHumanDTO(human);
-    }//TODO: написать докерфайлы для бэка и фронта + добавить их в докер сомпоус
-    //TODO: exceptionHandler + good messages about errors (back + front)
-    //TODO: убрать смесь английского и русского на фронтенде (и нейминги тоже должны быть в одном стиле, везде Human)
-    //TODO: асинхронно обновлять табличку после добавления элемента в коллекцию
+    }
 
     public Page<HumanDTO> getPageHumans(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

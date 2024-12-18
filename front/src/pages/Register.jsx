@@ -18,12 +18,8 @@ function Register() {
 
         if (response.ok) {
             const data = await response.json();
-            // Assuming the JWT token is in data.token
             const { token } = data;
-            // Save the token to localStorage (or sessionStorage)
             localStorage.setItem('jwtToken', token);
-            // console.log("token " + token)
-            // Navigate to home page
             navigate('/home', { state: { username } });
         } else {
             alert('Registration failed');

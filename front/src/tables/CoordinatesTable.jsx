@@ -1,17 +1,16 @@
 import React, {useEffect, useState} from 'react';
 
 const CoordinatesTable = () => {
-    const [coordinates, setCoordinates] = useState([]); // Для хранения списка координат
+    const [coordinates, setCoordinates] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [editingCoordinate, setEditingCoordinate] = useState(null); // Для редактирования координат
+    const [editingCoordinate, setEditingCoordinate] = useState(null);
 
-    // Функция для загрузки данных с бэкенда
     const fetchCoordinates = async (page) => {
         setLoading(true);
-        const jwtToken = localStorage.getItem('jwtToken'); // Получаем JWT из localStorage
+        const jwtToken = localStorage.getItem('jwtToken');
 
         try {
             const response = await fetch(`http://localhost:8080/api/coord/page?page=${page}&size=10`, {
@@ -27,9 +26,8 @@ const CoordinatesTable = () => {
             }
 
             const data = await response.json();
-            // console.log(data)
-            setCoordinates(data.content); // координаты возвращаются в свойстве content
-            setTotalPages(data.totalPages); // totalPages возвращаются в свойстве totalPages
+            setCoordinates(data.content);
+            setTotalPages(data.totalPages);
         } catch (error) {
             console.error('Ошибка при загрузке данных:', error);
         } finally {
@@ -37,12 +35,10 @@ const CoordinatesTable = () => {
         }
     };
 
-    // Загрузка данных при изменении страницы
     useEffect(() => {
         fetchCoordinates(currentPage);
     }, [currentPage]);
 
-    // Функция для получения данных координаты для редактирования
     const fetchCoordinateDetails = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -65,7 +61,6 @@ const CoordinatesTable = () => {
         }
     };
 
-    // Функция для отправки изменений на сервер
     const handleEditSubmit = async () => {
         if (!editingCoordinate || editingCoordinate.x === null || editingCoordinate.y === null) {
             setError('Поле "x" и "y" обязательно');
@@ -90,14 +85,13 @@ const CoordinatesTable = () => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
-            setEditingCoordinate(null); // Закрыть форму редактирования
-            fetchCoordinates(currentPage); // Обновить список координат
+            setEditingCoordinate(null);
+            fetchCoordinates(currentPage);
         } catch (error) {
             alert(error.message);
         }
     };
 
-    // Функция для удаления координаты
     const handleDelete = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -113,13 +107,12 @@ const CoordinatesTable = () => {
                 throw new Error('Ошибка при удалении координаты');
             }
 
-            fetchCoordinates(currentPage); // Обновить список координат после удаления
+            fetchCoordinates(currentPage);
         } catch (error) {
             alert(error.message);
         }
     };
 
-    // Обработчики для переключения страниц
     const handleNext = () => {
         if (currentPage < totalPages - 1) {
             setCurrentPage(currentPage + 1);
@@ -218,7 +211,6 @@ const CoordinatesTable = () => {
     );
 };
 
-// Стили для модального окна
 const modalStyles = {
     overlay: {
         position: 'fixed',

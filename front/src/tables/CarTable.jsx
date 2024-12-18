@@ -5,10 +5,9 @@ const CarTable = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [editingCar, setEditingCar] = useState(null); // Для хранения данных редактируемого автомобиля
+    const [editingCar, setEditingCar] = useState(null);
     const [error, setError] = useState('');
 
-    // Функция для загрузки данных с бэкенда
     const fetchCars = async (page) => {
         setLoading(true);
         const jwtToken = localStorage.getItem('jwtToken'); // Получаем JWT из localStorage
@@ -27,9 +26,8 @@ const CarTable = () => {
             }
 
             const data = await response.json();
-            // console.log(data)
-            setCars(data.content); // cars возвращаются в свойстве content
-            setTotalPages(data.totalPages); // totalPages возвращаются в свойстве totalPages
+            setCars(data.content);
+            setTotalPages(data.totalPages);
         } catch (error) {
             console.error('Ошибка при загрузке данных:', error);
         } finally {
@@ -37,12 +35,10 @@ const CarTable = () => {
         }
     };
 
-    // Загрузка данных при изменении страницы
     useEffect(() => {
         fetchCars(currentPage);
     }, [currentPage]);
 
-    // Функция для получения данных автомобиля для редактирования
     const fetchCarDetails = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -65,7 +61,6 @@ const CarTable = () => {
         }
     };
 
-    // Функция для отправки изменений на сервер
     const handleEditSubmit = async () => {
         if (editingCar === null || editingCar.cool === null) {
             setError('Поле "cool" обязательно');
@@ -89,14 +84,13 @@ const CarTable = () => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
-            setEditingCar(null); // Закрыть форму редактирования
-            fetchCars(currentPage); // Обновить список автомобилей
+            setEditingCar(null);
+            fetchCars(currentPage);
         } catch (error) {
             alert(error.message);
         }
     };
 
-    // Функция для удаления автомобиля
     const handleDelete = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -112,13 +106,12 @@ const CarTable = () => {
                 throw new Error('Ошибка при удалении автомобиля');
             }
 
-            fetchCars(currentPage); // Обновить список автомобилей после удаления
+            fetchCars(currentPage);
         } catch (error) {
             alert(error.message);
         }
     };
 
-    // Обработчики для переключения страниц
     const handleNext = () => {
         if (currentPage < totalPages - 1) {
             setCurrentPage(currentPage + 1);
