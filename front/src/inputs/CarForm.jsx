@@ -48,13 +48,16 @@ const CarForm = ({ setCars, closeModal }) => {
             <h3>Car Form</h3>
             <label>
                 Cool:
-                <input type="radio" name="cool" value="true" onChange={() => setCool(true)} /> Yes
-                <input type="radio" name="cool" value="false" onChange={() => setCool(false)} /> No
+                <input type="radio" name="cool" value="true" onChange={() => setCool(true)}/> Yes
+                <input type="radio" name="cool" value="false" onChange={() => setCool(false)}/> No
             </label>
-            <br />
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <br/>
+            {error && <p style={{color: 'red'}}>{error}</p>}
             <button type="button" onClick={handleSubmit}>
                 Submit
+            </button>
+            <button type="button" onClick={closeModal}>
+                Close
             </button>
         </div>
     );

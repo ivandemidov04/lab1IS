@@ -6,21 +6,23 @@ const CarTable = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
     const [editingCar, setEditingCar] = useState(null); // State for editing car
-    const [error, setError] = useState('');
+    const [filteredCars, setFilteredCars] = useState([]); // Для хранения отфильтрованных автомобилей
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' }); // Для сортировки
 
     const fetchCars = async (page) => {
         setLoading(true);
-        const jwtToken = localStorage.getItem('jwtToken'); // Получаем JWT из localStorage
+        const jwtToken = localStorage.getItem('jwtToken');
 
         try {
             const response = await fetch(`http://localhost:8080/api/car/page?page=${page}&size=10`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                },
             });
 
             if (!response.ok) {
@@ -41,6 +43,44 @@ const CarTable = () => {
         fetchCars(currentPage);
     }, [currentPage]);
 
+    // Функция для сортировки
+    const handleSort = (column) => {
+        const direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+        setSortConfig({ key: column, direction });
+
+        const sortedCars = [...filteredCars].sort((a, b) => {
+            if (a[column] < b[column]) {
+                return direction === 'asc' ? -1 : 1;
+            }
+            if (a[column] > b[column]) {
+                return direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+        setFilteredCars(sortedCars);
+    };
+
+    useEffect(() => {
+        setFilteredCars(cars); // При изменении списка машин сбрасываем фильтрацию
+    }, [cars]);
+
+    // Функция для фильтрации по столбцу
+    const handleFilterCool = (e) => {
+        const filterValue = e.target.value.toLowerCase();
+        const filtered = cars.filter((car) =>
+            car.cool.toString().toLowerCase().includes(filterValue)
+        );
+        setFilteredCars(filtered);
+    };
+
+    const handleFilterUserId = (e) => {
+        const filterValue = e.target.value.toLowerCase();
+        const filtered = cars.filter((car) =>
+            car.userId.toString().toLowerCase().includes(filterValue)
+        );
+        setFilteredCars(filtered);
+    };
+
     const fetchCarDetails = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -48,8 +88,8 @@ const CarTable = () => {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                },
             });
 
             if (!response.ok) {
@@ -57,13 +97,12 @@ const CarTable = () => {
             }
 
             const car = await response.json();
-            setEditingCar(car); // Set car data to editing state
+            setEditingCar(car);
         } catch (error) {
             console.error('Ошибка при загрузке данных автомобиля:', error);
         }
     };
 
-    // Submit edited car details
     const handleEditSubmit = async () => {
         if (editingCar === null || editingCar.cool === null) {
             setError('Поле "cool" обязательно');
@@ -101,8 +140,8 @@ const CarTable = () => {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                },
             });
 
             if (!response.ok) {
@@ -114,7 +153,6 @@ const CarTable = () => {
             alert(error.message);
         }
     };
-
 
     const handleNext = () => {
         if (currentPage < totalPages - 1) {
@@ -141,7 +179,20 @@ const CarTable = () => {
             <button onClick={openModal}>Create car</button>
 
             {/* Create car modal */}
-            {isModalOpen && <CarForm setCars={setCars} closeModal={closeModal} />}
+            {isModalOpen && <CarForm setCars={setCars} closeModal={closeModal}/>}
+
+            <div>
+                <label>
+                    Filter:
+                    <input type="text" onChange={handleFilterUserId} placeholder="Filter by User ID"/>
+                </label>
+            </div>
+            <div>
+                <label>
+                    Filter:
+                    <input type="text" onChange={handleFilterCool} placeholder="Filter by cool"/>
+                </label>
+            </div>
 
             {loading ? (
                 <p>Загрузка...</p>
@@ -149,18 +200,18 @@ const CarTable = () => {
                 <table>
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Cool</th>
-                        <th>User ID</th>
+                        <th onClick={() => handleSort('id')}>ID</th>
+                        <th onClick={() => handleSort('cool')}>Cool</th>
+                        <th onClick={() => handleSort('userId')}>User ID</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {cars.map((car) => (
+                    {filteredCars.map((car) => (
                         <tr key={car.id}>
                             <td>{car.id}</td>
-                            <td>{car.cool ? 'Yes' : 'No'}</td>
+                            <td>{car.cool ? 'True' : 'False'}</td>
                             <td>{car.userId}</td>
                             <td>
                                 <button onClick={() => fetchCarDetails(car.id)}>Edit</button>
@@ -199,18 +250,18 @@ const CarTable = () => {
                                     name="cool"
                                     value="true"
                                     checked={editingCar.cool === true}
-                                    onChange={() => setEditingCar({ ...editingCar, cool: true })}
+                                    onChange={() => setEditingCar({...editingCar, cool: true})}
                                 /> Yes
                                 <input
                                     type="radio"
                                     name="cool"
                                     value="false"
                                     checked={editingCar.cool === false}
-                                    onChange={() => setEditingCar({ ...editingCar, cool: false })}
+                                    onChange={() => setEditingCar({...editingCar, cool: false})}
                                 /> No
                             </label>
-                            <br />
-                            {error && <p style={{ color: 'red' }}>{error}</p>}
+                            <br/>
+                            {error && <p style={{color: 'red'}}>{error}</p>}
                             <button type="button" onClick={handleEditSubmit}>
                                 Save changes
                             </button>

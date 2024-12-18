@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CoordinatesForm from '../inputs/CoordinatesForm'; // Импортируем компонент формы
+import CoordinatesForm from '../inputs/CoordinatesForm';
 
 const CoordinatesTable = () => {
     const [coordinates, setCoordinates] = useState([]);
@@ -7,7 +7,11 @@ const CoordinatesTable = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
     const [editingCoordinate, setEditingCoordinate] = useState(null);
+    const [filteredCoordinates, setFilteredCoordinates] = useState([]); // Для хранения отфильтрованных автомобилей
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' }); // Для сортировки
+
 
     const fetchCoordinates = async (page) => {
         setLoading(true);
@@ -39,6 +43,52 @@ const CoordinatesTable = () => {
     useEffect(() => {
         fetchCoordinates(currentPage);
     }, [currentPage]);
+
+    // Функция для сортировки
+    const handleSort = (column) => {
+        const direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+        setSortConfig({ key: column, direction });
+
+        const sortedCoordinates = [...filteredCoordinates].sort((a, b) => {
+            if (a[column] < b[column]) {
+                return direction === 'asc' ? -1 : 1;
+            }
+            if (a[column] > b[column]) {
+                return direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+        setFilteredCoordinates(sortedCoordinates);
+    };
+
+    useEffect(() => {
+        setFilteredCoordinates(coordinates); // При изменении списка машин сбрасываем фильтрацию
+    }, [coordinates]);
+
+    // Функция для фильтрации по столбцу
+    const handleFilterX = (e) => {
+        const filterValue = e.target.value.toLowerCase();
+        const filtered = coordinates.filter((coordinates) =>
+            coordinates.x.toString().toLowerCase().includes(filterValue)
+        );
+        setFilteredCoordinates(filtered);
+    };
+
+    const handleFilterY = (e) => {
+        const filterValue = e.target.value.toLowerCase();
+        const filtered = coordinates.filter((coordinates) =>
+            coordinates.y.toString().toLowerCase().includes(filterValue)
+        );
+        setFilteredCoordinates(filtered);
+    };
+
+    const handleFilterUserId = (e) => {
+        const filterValue = e.target.value.toLowerCase();
+        const filtered = coordinates.filter((coordinates) =>
+            coordinates.userId.toString().toLowerCase().includes(filterValue)
+        );
+        setFilteredCoordinates(filtered);
+    };
 
     const fetchCoordinateDetails = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
@@ -126,13 +176,38 @@ const CoordinatesTable = () => {
         }
     };
 
-    const handleCoordinateCreated = (newCoordinate) => {
-        setCoordinates((prevCoordinates) => [...prevCoordinates, newCoordinate]);
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
     };
 
     return (
         <div>
-            <CoordinatesForm onCoordinateCreated={handleCoordinateCreated} /> {/* Pass the callback to the form */}
+
+            <button onClick={openModal}>Create coordinate</button>
+            {isModalOpen && <CoordinatesForm setCoordinates={setCoordinates} closeModal={closeModal}/>}
+
+            <div>
+                <label>
+                    Filter:
+                    <input type="text" onChange={handleFilterUserId} placeholder="Filter by User ID"/>
+                </label>
+            </div>
+            <div>
+                <label>
+                    Filter:
+                    <input type="text" onChange={handleFilterX} placeholder="Filter by X"/>
+                </label>
+            </div>
+            <div>
+                <label>
+                    Filter:
+                    <input type="text" onChange={handleFilterY} placeholder="Filter by Y"/>
+                </label>
+            </div>
 
             {loading ? (
                 <p>Загрузка...</p>
@@ -140,16 +215,16 @@ const CoordinatesTable = () => {
                 <table>
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>X</th>
-                        <th>Y</th>
-                        <th>User ID</th>
+                        <th onClick={() => handleSort('id')}>ID</th>
+                        <th onClick={() => handleSort('x')}>X</th>
+                        <th onClick={() => handleSort('y')}>Y</th>
+                        <th onClick={() => handleSort('userId')}>User ID</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {coordinates.map((coord) => (
+                    {filteredCoordinates.map((coord) => (
                         <tr key={coord.id}>
                             <td>{coord.id}</td>
                             <td>{coord.x}</td>
@@ -190,20 +265,20 @@ const CoordinatesTable = () => {
                                 <input
                                     type="number"
                                     value={editingCoordinate.x}
-                                    onChange={(e) => setEditingCoordinate({ ...editingCoordinate, x: e.target.value })}
+                                    onChange={(e) => setEditingCoordinate({...editingCoordinate, x: e.target.value})}
                                 />
                             </label>
-                            <br />
+                            <br/>
                             <label>
                                 Y:
                                 <input
                                     type="number"
                                     value={editingCoordinate.y}
-                                    onChange={(e) => setEditingCoordinate({ ...editingCoordinate, y: e.target.value })}
+                                    onChange={(e) => setEditingCoordinate({...editingCoordinate, y: e.target.value})}
                                 />
                             </label>
-                            <br />
-                            {error && <p style={{ color: 'red' }}>{error}</p>}
+                            <br/>
+                            {error && <p style={{color: 'red'}}>{error}</p>}
                             <button type="button" onClick={handleEditSubmit}>
                                 Save changes
                             </button>

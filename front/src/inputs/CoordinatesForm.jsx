@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 
-const CoordinatesForm = ({ onCoordinateCreated }) => {
+const CoordinatesForm = ({ setCoordinates, closeModal }) => {
     const [x, setX] = useState('');
     const [y, setY] = useState('');
     const [error, setError] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleSubmit = async () => {
         if (!x || !y) {
@@ -43,77 +42,37 @@ const CoordinatesForm = ({ onCoordinateCreated }) => {
             }
 
             const newCoordinate = await response.json();
-            onCoordinateCreated(newCoordinate);
 
-            setIsModalOpen(false);
-            setX('');
-            setY('');
+            setCoordinates((prevCoordinates) => [...prevCoordinates, newCoordinate]);
+
+            closeModal();
         } catch (error) {
             alert(error.message);
         }
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
     return (
         <div>
-            <button onClick={openModal}>Create coordinates</button>
-
-            {/* Modal structure */}
-            {isModalOpen && (
-                <div style={modalStyles.overlay}>
-                    <div style={modalStyles.container}>
-                        <h3>Coordinates Form</h3>
-                        <label>
-                            X:
-                            <input type="number" value={x} onChange={(e) => setX(e.target.value)} />
-                        </label>
-                        <br />
-                        <label>
-                            Y:
-                            <input type="number" value={y} onChange={(e) => setY(e.target.value)} />
-                        </label>
-                        <br />
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
-                        <button type="button" onClick={handleSubmit}>
-                            Submit
-                        </button>
-                        <button type="button" onClick={closeModal}>
-                            Close
-                        </button>
-                    </div>
-                </div>
-            )}
+            <h3>Coordinates Form</h3>
+            <label>
+                X:
+                <input type="number" value={x} onChange={(e) => setX(e.target.value)} />
+            </label>
+            <br />
+            <label>
+                Y:
+                <input type="number" value={y} onChange={(e) => setY(e.target.value)} />
+            </label>
+            <br />
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <button type="button" onClick={handleSubmit}>
+                Submit
+            </button>
+            <button type="button" onClick={closeModal}>
+                Close
+            </button>
         </div>
     );
-};
-
-const modalStyles = {
-    overlay: {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 1000,
-    },
-    container: {
-        backgroundColor: 'white',
-        padding: '20px',
-        borderRadius: '5px',
-        width: '300px',
-        textAlign: 'center',
-    },
 };
 
 export default CoordinatesForm;
