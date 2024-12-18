@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
+import CoordinatesForm from '../inputs/CoordinatesForm'; // Импортируем компонент формы
 
 const CoordinatesTable = () => {
     const [coordinates, setCoordinates] = useState([]);
@@ -125,8 +126,15 @@ const CoordinatesTable = () => {
         }
     };
 
+    // Callback to update coordinates when a new coordinate is created
+    const handleCoordinateCreated = (newCoordinate) => {
+        setCoordinates((prevCoordinates) => [...prevCoordinates, newCoordinate]);
+    };
+
     return (
         <div>
+            <CoordinatesForm onCoordinateCreated={handleCoordinateCreated} /> {/* Pass the callback to the form */}
+
             {loading ? (
                 <p>Загрузка...</p>
             ) : (

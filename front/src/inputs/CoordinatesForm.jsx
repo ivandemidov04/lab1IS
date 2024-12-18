@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-const CoordinatesForm = () => {
+const CoordinatesForm = ({ onCoordinateCreated }) => {
     const [x, setX] = useState('');
     const [y, setY] = useState('');
     const [error, setError] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleSubmit = async () => {
         if (!x || !y) {
@@ -42,7 +42,13 @@ const CoordinatesForm = () => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
+            // Get the newly created coordinate and pass it to the parent
+            const newCoordinate = await response.json();
+            onCoordinateCreated(newCoordinate); // Callback to parent to update the table
+
             setIsModalOpen(false);
+            setX('');
+            setY('');
         } catch (error) {
             alert(error.message);
         }

@@ -73,7 +73,6 @@ function Home() {
             <CarTable/>
 
             <h2>Coordinates</h2>
-            <CoordinatesForm/>
             <CoordinatesTable/>
 
             <h2>Humanbeings</h2>
