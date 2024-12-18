@@ -126,7 +126,6 @@ const CoordinatesTable = () => {
         }
     };
 
-    // Callback to update coordinates when a new coordinate is created
     const handleCoordinateCreated = (newCoordinate) => {
         setCoordinates((prevCoordinates) => [...prevCoordinates, newCoordinate]);
     };

@@ -42,9 +42,8 @@ const CoordinatesForm = ({ onCoordinateCreated }) => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
-            // Get the newly created coordinate and pass it to the parent
             const newCoordinate = await response.json();
-            onCoordinateCreated(newCoordinate); // Callback to parent to update the table
+            onCoordinateCreated(newCoordinate);
 
             setIsModalOpen(false);
             setX('');

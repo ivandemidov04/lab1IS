@@ -41,7 +41,6 @@ const CarTable = () => {
         fetchCars(currentPage);
     }, [currentPage]);
 
-    // Fetch car details for editing
     const fetchCarDetails = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -95,7 +94,6 @@ const CarTable = () => {
         }
     };
 
-    // Delete car
     const handleDelete = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
         try {
@@ -111,13 +109,13 @@ const CarTable = () => {
                 throw new Error('Ошибка при удалении автомобиля');
             }
 
-            fetchCars(currentPage); // Refresh the car list after deletion
+            fetchCars(currentPage);
         } catch (error) {
             alert(error.message);
         }
     };
 
-    // Pagination controls
+
     const handleNext = () => {
         if (currentPage < totalPages - 1) {
             setCurrentPage(currentPage + 1);
@@ -227,7 +225,6 @@ const CarTable = () => {
     );
 };
 
-// Стили для модального окна
 const modalStyles = {
     overlay: {
         position: 'fixed',

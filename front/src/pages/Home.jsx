@@ -76,7 +76,6 @@ function Home() {
             <CoordinatesTable/>
 
             <h2>Humanbeings</h2>
-            <HumanbeingForm/>
             <HumanbeingTable/>
 
             <h2>Features</h2>

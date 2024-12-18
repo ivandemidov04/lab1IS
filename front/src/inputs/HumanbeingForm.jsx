@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 const MoodEnum = { SADNESS: 'SADNESS', CALM: 'CALM', FRENZY: 'FRENZY' };
 const WeaponTypeEnum = { AXE: 'AXE', PISTOL: 'PISTOL', SHOTGUN: 'SHOTGUN', KNIFE: 'KNIFE' };
 
-const HumanbeingForm = () => {
+const HumanbeingForm = ({ onHumanbeingCreated }) => {
     const [name, setName] = useState('');
     const [coordId, setCoordId] = useState('');
     const [realHero, setRealHero] = useState(null);
@@ -63,7 +63,9 @@ const HumanbeingForm = () => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
-            setIsModalOpen(false); // Close modal after successful submission
+            const newHumanbeing = await response.json();
+            onHumanbeingCreated(newHumanbeing);
+            setIsModalOpen(false);
         } catch (error) {
             alert(error.message);
         }
@@ -151,7 +153,6 @@ const HumanbeingForm = () => {
     );
 };
 
-// Styles for modal
 const modalStyles = {
     overlay: {
         position: 'fixed',

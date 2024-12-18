@@ -12,7 +12,6 @@ const CarForm = ({ setCars, closeModal }) => {
         setError('');
         const data = { cool };
 
-        // Получаем токен из localStorage
         const token = localStorage.getItem('jwtToken');
         if (!token) {
             alert('JWT токен отсутствует. Пожалуйста, войдите в систему.');
@@ -33,12 +32,10 @@ const CarForm = ({ setCars, closeModal }) => {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
 
-            const newCar = await response.json();  // Получаем данные нового автомобиля
+            const newCar = await response.json();
 
-            // Обновляем список автомобилей в родительском компоненте
             setCars((prevCars) => [...prevCars, newCar]);
 
-            // Закрываем модальное окно
             closeModal();
 
         } catch (error) {

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import CoordinatesForm from "../inputs/CoordinatesForm.jsx";
+import HumanbeingForm from "../inputs/HumanbeingForm.jsx";
 
 const MoodEnum = { SADNESS: 'SADNESS', CALM: 'CALM', FRENZY: 'FRENZY' };
 const WeaponTypeEnum = { AXE: 'AXE', PISTOL: 'PISTOL', SHOTGUN: 'SHOTGUN', KNIFE: 'KNIFE' };
@@ -104,7 +106,6 @@ const HumanbeingTable = () => {
         data.mood = editingHuman.mood
         data.impactSpeed = editingHuman.impactSpeed
         data.weaponType = editingHuman.weaponType
-        // console.log(JSON.stringify(data))
 
         try {
             const response = await fetch(`http://localhost:8080/api/human/${editingHuman.id}`, {
@@ -162,8 +163,15 @@ const HumanbeingTable = () => {
         }
     };
 
+    const handleHumanbeingCreated = (newHumanbeing) => {
+        setHumanbeings((prevHumanbeing) => [...prevHumanbeing, newHumanbeing]);
+    };
+
     return (
         <div>
+            <HumanbeingForm onHumanbeingCreated={handleHumanbeingCreated} /> {/* Pass the callback to the form */}
+
+
             {loading ? (
                 <p>Загрузка...</p>
             ) : (
