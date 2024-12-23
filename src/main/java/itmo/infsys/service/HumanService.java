@@ -1,6 +1,7 @@
 package itmo.infsys.service;
 
 import itmo.infsys.domain.dto.HumanDTO;
+import itmo.infsys.domain.dto.ImportDTO;
 import itmo.infsys.domain.model.Car;
 import itmo.infsys.domain.model.Coord;
 import itmo.infsys.domain.model.Human;
@@ -127,6 +128,10 @@ public class HumanService {
             humansDTOs.add(mapHumanToHumanDTO(human));
         }
         return new PageImpl<>(humansDTOs, humansPage.getPageable(), humansPage.getTotalElements());
+    }
+
+    public Boolean saveAll(List<ImportDTO> importDTOs) {
+
     }
 }
 

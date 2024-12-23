@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const FeatureComponent = () => {
+const FeatureComponent = ({ fetchHumanbeings, currentPage }) => {
     const [selectedWeaponType, setSelectedWeaponType] = useState('AXE');
     const [modalContent, setModalContent] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,6 +41,8 @@ const FeatureComponent = () => {
                 alert(error.message);
             }
         }
+        // setHumanbeings([]);
+        fetchHumanbeings(currentPage);
     };
 
     const handleGroupByName = () => {

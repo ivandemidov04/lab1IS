@@ -1,12 +1,10 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import CarForm from '../inputs/CarForm';
-import CoordinatesForm from '../inputs/CoordinatesForm';
-import HumanbeingForm from '../inputs/HumanbeingForm';
 import CarTable from "../tables/CarTable";
 import CoordinatesTable from "../tables/CoordinatesTable";
 import HumanbeingTable from "../tables/HumanbeingTable";
 import Feature from "../features/Feature.jsx";
+import Import from "../features/Import.jsx";
 
 function Home() {
     const location = useLocation();
@@ -69,6 +67,9 @@ function Home() {
                 </div>
             </header>
 
+            <h2>Uploading file</h2>
+            <Import/>
+
             <h2>Cars</h2>
             <CarTable/>
 
@@ -77,9 +78,6 @@ function Home() {
 
             <h2>Humanbeings</h2>
             <HumanbeingTable/>
-
-            <h2>Features</h2>
-            <Feature/>
         </div>
     );
 }

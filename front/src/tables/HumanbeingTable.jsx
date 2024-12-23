@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import HumanbeingForm from "../inputs/HumanbeingForm";
+import Feature from "../features/Feature.jsx";
 
 const MoodEnum = { SADNESS: 'SADNESS', CALM: 'CALM', FRENZY: 'FRENZY' };
 const WeaponTypeEnum = { AXE: 'AXE', PISTOL: 'PISTOL', SHOTGUN: 'SHOTGUN', KNIFE: 'KNIFE' };
@@ -76,14 +77,6 @@ const HumanbeingTable = () => {
         );
         setFilteredHumanbeings(filtered);
     };
-
-    // const handleFilterUserId = (e) => {
-    //     const filterValue = e.target.value.toLowerCase();
-    //     const filtered = cars.filter((car) =>
-    //         car.userId.toString().toLowerCase().includes(filterValue)
-    //     );
-    //     setFilteredCars(filtered);
-    // };
 
     const fetchHumanDetails = async (id) => {
         const jwtToken = localStorage.getItem('jwtToken');
@@ -165,7 +158,7 @@ const HumanbeingTable = () => {
             setEditingHuman(null); // Закрыть форму редактирования
             fetchHumanbeings(currentPage); // Обновить список
         } catch (error) {
-            alert(error.message);
+            setError(error.message);
         }
     };
 
@@ -398,6 +391,9 @@ const HumanbeingTable = () => {
                     </div>
                 </div>
             )}
+
+            <h2>Features</h2>
+            <Feature fetchHumanbeings={fetchHumanbeings} currentPage={currentPage}/>
         </div>
     );
 };
