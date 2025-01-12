@@ -2,13 +2,11 @@ package itmo.infsys.service;
 
 import itmo.infsys.domain.dto.HumanDTO;
 import itmo.infsys.domain.dto.ImportDTO;
-import itmo.infsys.domain.model.Car;
-import itmo.infsys.domain.model.Coord;
-import itmo.infsys.domain.model.Human;
-import itmo.infsys.domain.model.User;
+import itmo.infsys.domain.model.*;
 import itmo.infsys.repository.CarRepository;
 import itmo.infsys.repository.CoordRepository;
 import itmo.infsys.repository.HumanRepository;
+import itmo.infsys.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,13 +25,15 @@ public class HumanService {
     private final CoordRepository coordRepository;
     private final CarRepository carRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public HumanService(HumanRepository humanRepository, CoordRepository coordRepository, CarRepository carRepository, UserService userService) {
+    public HumanService(HumanRepository humanRepository, CoordRepository coordRepository, CarRepository carRepository, UserService userService, UserRepository userRepository) {
         this.humanRepository = humanRepository;
         this.coordRepository = coordRepository;
         this.carRepository = carRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     public HumanDTO createHuman(HumanDTO humanDTO) {
@@ -130,8 +131,9 @@ public class HumanService {
         return new PageImpl<>(humansDTOs, humansPage.getPageable(), humansPage.getTotalElements());
     }
 
-    public Boolean saveAll(List<ImportDTO> importDTOs) {
-
+    //TODO: csv/xml
+    //TODO: имя юзера юник
+    public void saveAll(Human[] humans) {
+        humanRepository.saveAll(Arrays.asList(humans));
     }
 }
-

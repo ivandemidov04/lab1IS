@@ -1,0 +1,21 @@
+[{
+  "name": "van",
+  "x": 1.0,
+  "y": 1,
+  "realHero": true,
+  "hasToothpick": true,
+  "cool": true,
+  "mood": "SADNESS",
+  "impactSpeed": 20.0,
+  "weaponType": "AXE"
+}, {
+  "name": "vanvanvan",
+  "x": 3.0,
+  "y": 3,
+  "realHero": false,
+  "hasToothpick": false,
+  "cool": false,
+  "mood": "SADNESS",
+  "impactSpeed": 20.0,
+  "weaponType": "AXE"
+}]

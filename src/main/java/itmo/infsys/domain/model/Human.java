@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @Table(name = "humans")
@@ -64,6 +65,18 @@ public class Human {
         this.mood = mood;
         this.impactSpeed = impactSpeed;
         this.weaponType = weaponType;
+        this.user = user;
+    }
+
+    public Human(Map<String, String> json, Coord coord, Car car, User user) throws Exception {
+        this.name = json.get("name");
+        this.coord = coord;
+        this.realHero = Boolean.parseBoolean(json.get("realHero"));
+        this.hasToothpick = Boolean.parseBoolean(json.get("hasToothpick"));
+        this.car = car;
+        this.mood = Mood.valueOf(json.get("mood"));
+        this.impactSpeed = Double.parseDouble(json.get("impactSpeed"));
+        this.weaponType = WeaponType.valueOf(json.get("weaponType"));
         this.user = user;
     }
 

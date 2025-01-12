@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Entity
 @Table(name = "cars")
 @Getter
@@ -27,6 +29,11 @@ public class Car {
 
     public Car(Boolean cool, User user) {
         this.cool = cool;
+        this.user = user;
+    }
+
+    public Car(Map<String, String> json, User user) {
+        this.cool = Boolean.parseBoolean(json.get("cool"));
         this.user = user;
     }
 }

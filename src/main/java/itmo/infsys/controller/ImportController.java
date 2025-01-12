@@ -1,8 +1,6 @@
 package itmo.infsys.controller;
 
-import itmo.infsys.domain.dto.HumanDTO;
 import itmo.infsys.domain.dto.ImportDTO;
-import itmo.infsys.repository.ImportRepository;
 import itmo.infsys.service.ImportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/file")
@@ -31,8 +28,13 @@ public class ImportController {
         return importService.getPageImports(page, size);
     }
 
+    @PostMapping("/import")
+    public ResponseEntity<Boolean> importFromFile (@RequestParam("file") MultipartFile file) throws IOException {
+        return new ResponseEntity<>(importService.importFromFile(file), HttpStatus.OK);
+    }
+
     @PostMapping
-    public ResponseEntity<ImportDTO> createImport(@RequestParam("file") MultipartFile file) throws IOException {
-        return new ResponseEntity<>(importService.createImport(file), HttpStatus.CREATED);
+    public ResponseEntity<ImportDTO> createImport(@RequestParam("filename") String filename, @RequestParam("status") Boolean status) {
+        return new ResponseEntity<>(importService.createImport(filename, status), HttpStatus.CREATED);
     }
 }
