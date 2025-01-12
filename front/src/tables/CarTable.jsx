@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import SockJS from 'sockjs-client/dist/sockjs'
+import { Stomp } from '@stomp/stompjs';
 import CarForm from '../inputs/CarForm'; // Импортируем CarForm
 
 const CarTable = () => {
@@ -12,9 +14,26 @@ const CarTable = () => {
     const [filteredCars, setFilteredCars] = useState([]); // Для хранения отфильтрованных автомобилей
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' }); // Для сортировки
 
+    const jwtToken = localStorage.getItem('jwtToken');
+    useEffect(() => {
+        connectWebSocket(currentPage)
+    }, [currentPage])
+    function connectWebSocket(currentPage) {
+        const socket = new SockJS("http://localhost:8080/ws")
+        let stompClient = Stomp.client(socket)
+
+        stompClient.connect({
+            // Заголовки для подключения
+            Authorization: `Bearer ${jwtToken}`,  // Передаем Bearer токен
+        }, function () {
+            stompClient.subscribe('/topic/app', () => {
+                fetchCars(currentPage)
+            })
+        })
+    }
+
     const fetchCars = async (page) => {
         setLoading(true);
-        const jwtToken = localStorage.getItem('jwtToken');
 
         try {
             const response = await fetch(`http://localhost:8080/api/car/page?page=${page}&size=10`, {

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,17 +20,20 @@ import java.util.Objects;
 public class CarService {
     private final CarRepository carRepository;
     private final UserService userService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public CarService(CarRepository carRepository, UserService userService) {
+    public CarService(CarRepository carRepository, UserService userService, SimpMessagingTemplate messagingTemplate) {
         this.carRepository = carRepository;
         this.userService = userService;
+        this.messagingTemplate = messagingTemplate;
     }
 
     public CarDTO createCar(CarDTO carDTO) {
         User user = userService.getCurrentUser();
         Car car = new Car(carDTO.getCool(), user);
         Car savedCar = carRepository.save(car);
+        messagingTemplate.convertAndSend("/topic/app", carRepository.findAll());
         return mapCarToCarDTO(savedCar);
     }
 
@@ -52,6 +56,7 @@ public class CarService {
         car.setCool(carDTO.getCool());
         car.setUser(user);
         Car updatedCar = carRepository.save(car);
+        messagingTemplate.convertAndSend("/topic/app", carRepository.findAll());
         return mapCarToCarDTO(updatedCar);
     }
 
@@ -62,6 +67,7 @@ public class CarService {
             throw new RuntimeException("Car doesn't belong to this user");
         }
         carRepository.deleteById(id);
+        messagingTemplate.convertAndSend("/topic/app", carRepository.findAll());
     }
 
     public CarDTO mapCarToCarDTO(Car car) {

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,20 +32,24 @@ public class ImportService {
     private final CarRepository carRepository;
     private final CoordRepository coordRepository;
     private final HumanRepository humanRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public ImportService(ImportRepository importRepository, HumanService humanService, UserService userService, CarRepository carRepository, CoordRepository coordRepository, HumanRepository humanRepository) {
+    public ImportService(ImportRepository importRepository, HumanService humanService, UserService userService,
+                         CarRepository carRepository, CoordRepository coordRepository, HumanRepository humanRepository, SimpMessagingTemplate messagingTemplate) {
         this.importRepository = importRepository;
         this.humanService = humanService;
         this.userService = userService;
         this.carRepository = carRepository;
         this.coordRepository = coordRepository;
         this.humanRepository = humanRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     public ImportDTO createImport(String filename, Boolean status) {
         User user = userService.getCurrentUser();
         Import importt = importRepository.save(new Import(filename, status, user));
+        messagingTemplate.convertAndSend("/topic/import_history", importRepository.findAll());
         return mapImportToImportDTO(importt);
     }
 

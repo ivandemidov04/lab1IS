@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-const CarForm = ({ setCars, closeModal }) => {
+const CarForm = ({ closeModal, setCars }) => {
     const [cool, setCool] = useState(null);
     const [error, setError] = useState('');
 

@@ -1,10 +1,7 @@
-import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CarTable from "../tables/CarTable";
 import CoordinatesTable from "../tables/CoordinatesTable";
 import HumanbeingTable from "../tables/HumanbeingTable";
-import Feature from "../features/Feature.jsx";
-import Import from "../features/Import.jsx";
 
 function Home() {
     const location = useLocation();
@@ -68,7 +65,7 @@ function Home() {
             </header>
 
             <h2>Uploading file</h2>
-            <Import/>
+            {/*<Import/>*/}
 
             <h2>Cars</h2>
             <CarTable/>
