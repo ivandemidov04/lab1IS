@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CoordinatesForm = ({ setCoordinates, closeModal }) => {
+const CoordinatesForm = ({ closeModal }) => {
     const [x, setX] = useState('');
     const [y, setY] = useState('');
     const [error, setError] = useState('');
@@ -40,10 +40,6 @@ const CoordinatesForm = ({ setCoordinates, closeModal }) => {
             if (!response.ok) {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
-
-            const newCoordinate = await response.json();
-
-            setCoordinates((prevCoordinates) => [...prevCoordinates, newCoordinate]);
 
             closeModal();
         } catch (error) {

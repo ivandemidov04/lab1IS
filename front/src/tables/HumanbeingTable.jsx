@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import HumanbeingForm from "../inputs/HumanbeingForm";
 import Feature from "../features/Feature.jsx";
+import SockJS from 'sockjs-client/dist/sockjs'
+import { Stomp } from '@stomp/stompjs';
 
 const MoodEnum = { SADNESS: 'SADNESS', CALM: 'CALM', FRENZY: 'FRENZY' };
 const WeaponTypeEnum = { AXE: 'AXE', PISTOL: 'PISTOL', SHOTGUN: 'SHOTGUN', KNIFE: 'KNIFE' };
@@ -16,6 +18,24 @@ const HumanbeingTable = () => {
     const [filteredHumanbeings, setFilteredHumanbeings] = useState([]); // Для хранения отфильтрованных автомобилей
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' }); // Для сортировки
 
+    const jwtToken = localStorage.getItem('jwtToken');
+    useEffect(() => {
+        connectWebSocket(currentPage)
+    }, [currentPage])
+    function connectWebSocket(currentPage) {
+        const socket = new SockJS("http://localhost:8080/ws")
+
+        let stompClient = Stomp.over(socket)
+
+        stompClient.connect({
+            // Заголовки для подключения
+            Authorization: `Bearer ${jwtToken}`,  // Передаем Bearer токен
+        }, function () {
+            stompClient.subscribe('/topic/human', () => {
+                fetchHumanbeings(currentPage)
+            })
+        })
+    }
 
     const fetchHumanbeings = async (page) => {
         setLoading(true);

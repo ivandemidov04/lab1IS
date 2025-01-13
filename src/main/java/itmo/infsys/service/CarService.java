@@ -17,13 +17,13 @@ import java.util.Objects;
 public class CarService {
     private final CarRepository carRepository;
     private final UserService userService;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    public CarService(CarRepository carRepository, UserService userService, SimpMessagingTemplate messagingTemplate) {
+    public CarService(CarRepository carRepository, UserService userService, SimpMessagingTemplate simpMessagingTemplate) {
         this.carRepository = carRepository;
         this.userService = userService;
-        this.messagingTemplate = messagingTemplate;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     public CarDTO createCar(CarDTO carDTO) {
@@ -31,7 +31,8 @@ public class CarService {
         Car car = new Car(carDTO.getCool(), user);
         Car savedCar = carRepository.save(car);
         //TODO: map cars to dtos, return current page, not all cars
-        messagingTemplate.convertAndSend("/topic/car", carRepository.findAll());
+        //mapCarsToCarDTOs(carRepository.findAll(pageable)) только еще посортить
+        simpMessagingTemplate.convertAndSend("/topic/car", carRepository.findAll());
         return mapCarToCarDTO(savedCar);
     }
 
@@ -54,7 +55,7 @@ public class CarService {
         car.setCool(carDTO.getCool());
         car.setUser(user);
         Car updatedCar = carRepository.save(car);
-        messagingTemplate.convertAndSend("/topic/car", carRepository.findAll());
+        simpMessagingTemplate.convertAndSend("/topic/car", carRepository.findAll());
         return mapCarToCarDTO(updatedCar);
     }
 
@@ -65,7 +66,7 @@ public class CarService {
             throw new RuntimeException("Car doesn't belong to this user");
         }
         carRepository.deleteById(id);
-        messagingTemplate.convertAndSend("/topic/car", carRepository.findAll());
+        simpMessagingTemplate.convertAndSend("/topic/car", carRepository.findAll());
     }
 
     public CarDTO mapCarToCarDTO(Car car) {

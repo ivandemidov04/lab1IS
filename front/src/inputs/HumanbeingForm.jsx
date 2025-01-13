@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const MoodEnum = { SADNESS: 'SADNESS', CALM: 'CALM', FRENZY: 'FRENZY' };
 const WeaponTypeEnum = { AXE: 'AXE', PISTOL: 'PISTOL', SHOTGUN: 'SHOTGUN', KNIFE: 'KNIFE' };
 
-const HumanbeingForm = ({ setHumanbeings, closeModal }) => {
+const HumanbeingForm = ({ closeModal }) => {
     const [name, setName] = useState('');
     const [coordId, setCoordId] = useState('');
     const [realHero, setRealHero] = useState(null);
@@ -61,10 +61,6 @@ const HumanbeingForm = ({ setHumanbeings, closeModal }) => {
             if (!response.ok) {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
-
-            const newHumanbeing = await response.json();
-
-            setHumanbeings((prevHumanbeings) => [...prevHumanbeings, newHumanbeing]);
 
             closeModal();
 

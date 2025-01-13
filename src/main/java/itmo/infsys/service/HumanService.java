@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,14 +27,16 @@ public class HumanService {
     private final CarRepository carRepository;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    public HumanService(HumanRepository humanRepository, CoordRepository coordRepository, CarRepository carRepository, UserService userService, UserRepository userRepository) {
+    public HumanService(HumanRepository humanRepository, CoordRepository coordRepository, CarRepository carRepository, UserService userService, UserRepository userRepository, SimpMessagingTemplate simpMessagingTemplate) {
         this.humanRepository = humanRepository;
         this.coordRepository = coordRepository;
         this.carRepository = carRepository;
         this.userService = userService;
         this.userRepository = userRepository;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     public HumanDTO createHuman(HumanDTO humanDTO) {
@@ -58,6 +61,7 @@ public class HumanService {
                 user
         );
         Human humanSaved = humanRepository.save(human);
+        simpMessagingTemplate.convertAndSend("/topic/human", humanRepository.findAll());
         return mapHumanToHumanDTO(humanSaved);
     }
 
@@ -94,6 +98,7 @@ public class HumanService {
         human.setImpactSpeed(humanDTO.getImpactSpeed());
         human.setUser(user);
         Human humanUpdated = humanRepository.save(human);
+        simpMessagingTemplate.convertAndSend("/topic/human", humanRepository.findAll());
         return mapHumanToHumanDTO(humanUpdated);
     }
 
@@ -104,6 +109,7 @@ public class HumanService {
             throw new RuntimeException("Human doesn't belong to this user");
         }
         humanRepository.deleteById(id);
+        simpMessagingTemplate.convertAndSend("/topic/human", humanRepository.findAll());
     }
 
     public HumanDTO mapHumanToHumanDTO(Human human) {

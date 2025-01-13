@@ -21,16 +21,6 @@ const CarTable = () => {
     function connectWebSocket(currentPage) {
         const socket = new SockJS("http://localhost:8080/ws")
 
-        socket.onopen = function () {
-            console.log("WebSocket connected.");
-        };
-        socket.onerror = function (error) {
-            console.log("WebSocket error: " + error);
-        };
-        socket.onclose = function () {
-            console.log("WebSocket connection closed.");
-        };
-
         let stompClient = Stomp.over(socket)
 
         stompClient.connect({

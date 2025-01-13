@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,17 +20,20 @@ import java.util.Objects;
 public class CoordService {
     private final CoordRepository coordRepository;
     private final UserService userService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    public CoordService(CoordRepository coordRepository, UserService userService) {
+    public CoordService(CoordRepository coordRepository, UserService userService, SimpMessagingTemplate simpMessagingTemplate) {
         this.coordRepository = coordRepository;
         this.userService = userService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     public CoordDTO createCoord(CoordDTO coordDTO) {
         User user = userService.getCurrentUser();
         Coord coord = new Coord(coordDTO.getX(), coordDTO.getY(), user);
         Coord savedCoord = coordRepository.save(coord);
+        simpMessagingTemplate.convertAndSend("/topic/coord", coordRepository.findAll());
         return mapCoordToCoordDTO(savedCoord);
     }
 
@@ -53,6 +57,7 @@ public class CoordService {
         coord.setY(coordDTO.getY());
         coord.setUser(user);
         Coord updatedCoord = coordRepository.save(coord);
+        simpMessagingTemplate.convertAndSend("/topic/coord", coordRepository.findAll());
         return mapCoordToCoordDTO(updatedCoord);
     }
 
@@ -63,6 +68,7 @@ public class CoordService {
             throw new RuntimeException("Coord doesn't belong to this user");
         }
         coordRepository.deleteById(id);
+        simpMessagingTemplate.convertAndSend("/topic/coord", coordRepository.findAll());
     }
 
     public CoordDTO mapCoordToCoordDTO (Coord coord) {

@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CoordinatesForm from '../inputs/CoordinatesForm';
+import SockJS from 'sockjs-client/dist/sockjs'
+import { Stomp } from '@stomp/stompjs';
 
 const CoordinatesTable = () => {
     const [coordinates, setCoordinates] = useState([]);
@@ -12,6 +14,24 @@ const CoordinatesTable = () => {
     const [filteredCoordinates, setFilteredCoordinates] = useState([]); // Для хранения отфильтрованных автомобилей
     const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' }); // Для сортировки
 
+    const jwtToken = localStorage.getItem('jwtToken');
+    useEffect(() => {
+        connectWebSocket(currentPage)
+    }, [currentPage])
+    function connectWebSocket(currentPage) {
+        const socket = new SockJS("http://localhost:8080/ws")
+
+        let stompClient = Stomp.over(socket)
+
+        stompClient.connect({
+            // Заголовки для подключения
+            Authorization: `Bearer ${jwtToken}`,  // Передаем Bearer токен
+        }, function () {
+            stompClient.subscribe('/topic/coord', () => {
+                fetchCoordinates(currentPage)
+            })
+        })
+    }
 
     const fetchCoordinates = async (page) => {
         setLoading(true);
