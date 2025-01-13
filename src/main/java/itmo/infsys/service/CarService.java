@@ -5,10 +5,7 @@ import itmo.infsys.domain.model.Car;
 import itmo.infsys.domain.model.User;
 import itmo.infsys.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +30,8 @@ public class CarService {
         User user = userService.getCurrentUser();
         Car car = new Car(carDTO.getCool(), user);
         Car savedCar = carRepository.save(car);
-        messagingTemplate.convertAndSend("/topic/app", carRepository.findAll());
+        //TODO: map cars to dtos, return current page, not all cars
+        messagingTemplate.convertAndSend("/topic/car", carRepository.findAll());
         return mapCarToCarDTO(savedCar);
     }
 
@@ -56,7 +54,7 @@ public class CarService {
         car.setCool(carDTO.getCool());
         car.setUser(user);
         Car updatedCar = carRepository.save(car);
-        messagingTemplate.convertAndSend("/topic/app", carRepository.findAll());
+        messagingTemplate.convertAndSend("/topic/car", carRepository.findAll());
         return mapCarToCarDTO(updatedCar);
     }
 
@@ -67,7 +65,7 @@ public class CarService {
             throw new RuntimeException("Car doesn't belong to this user");
         }
         carRepository.deleteById(id);
-        messagingTemplate.convertAndSend("/topic/app", carRepository.findAll());
+        messagingTemplate.convertAndSend("/topic/car", carRepository.findAll());
     }
 
     public CarDTO mapCarToCarDTO(Car car) {

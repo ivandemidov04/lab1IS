@@ -20,13 +20,24 @@ const CarTable = () => {
     }, [currentPage])
     function connectWebSocket(currentPage) {
         const socket = new SockJS("http://localhost:8080/ws")
-        let stompClient = Stomp.client(socket)
+
+        socket.onopen = function () {
+            console.log("WebSocket connected.");
+        };
+        socket.onerror = function (error) {
+            console.log("WebSocket error: " + error);
+        };
+        socket.onclose = function () {
+            console.log("WebSocket connection closed.");
+        };
+
+        let stompClient = Stomp.over(socket)
 
         stompClient.connect({
             // Заголовки для подключения
             Authorization: `Bearer ${jwtToken}`,  // Передаем Bearer токен
         }, function () {
-            stompClient.subscribe('/topic/app', () => {
+            stompClient.subscribe('/topic/car', () => {
                 fetchCars(currentPage)
             })
         })
@@ -198,7 +209,7 @@ const CarTable = () => {
             <button onClick={openModal}>Create car</button>
 
             {/* Create car modal */}
-            {isModalOpen && <CarForm setCars={setCars} closeModal={closeModal}/>}
+            {isModalOpen && <CarForm closeModal={closeModal}/>}
 
             <div>
                 <label>

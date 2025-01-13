@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const CarForm = ({ closeModal, setCars }) => {
+const CarForm = ({ closeModal }) => {
     const [cool, setCool] = useState(null);
     const [error, setError] = useState('');
 
@@ -31,10 +31,6 @@ const CarForm = ({ closeModal, setCars }) => {
             if (!response.ok) {
                 throw new Error('Ошибка при отправке данных на сервер');
             }
-
-            const newCar = await response.json();
-
-            setCars((prevCars) => [...prevCars, newCar]);
 
             closeModal();
 
