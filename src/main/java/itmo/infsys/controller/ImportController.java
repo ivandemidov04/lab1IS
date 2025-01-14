@@ -37,4 +37,16 @@ public class ImportController {
     public ResponseEntity<ImportDTO> createImport(@RequestParam("filename") String filename, @RequestParam("status") Boolean status) {
         return new ResponseEntity<>(importService.createImport(filename, status), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<ImportDTO> deleteImport(@PathVariable Long id) {
+        importService.deleteImport(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("all")
+    public ResponseEntity<ImportDTO> deleteAllImports() {
+        importService.deleteAllImports();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

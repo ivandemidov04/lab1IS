@@ -61,8 +61,8 @@ function Home() {
                 </div>
                 <div>
                     <button onClick={handleLogout}>Logout</button>
-                    <button onClick={handleBecomeAdmin}>Become an admin</button>
-                    <button onClick={handleGoToAdminPanel}>Go to admin panel</button>
+                    {(role !== 'ROLE_ADMIN') && (<button onClick={handleBecomeAdmin}>Become an admin</button>)}
+                    {(role !== 'ROLE_USER') && (<button onClick={handleGoToAdminPanel}>Go to admin panel</button>)}
                 </div>
             </header>
 

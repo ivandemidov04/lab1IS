@@ -1,7 +1,6 @@
 package itmo.infsys.service;
 
 import itmo.infsys.domain.dto.HumanDTO;
-import itmo.infsys.domain.dto.ImportDTO;
 import itmo.infsys.domain.model.*;
 import itmo.infsys.repository.CarRepository;
 import itmo.infsys.repository.CoordRepository;
@@ -105,7 +104,7 @@ public class HumanService {
     public void deleteHuman(Long id) {
         Human human = humanRepository.findById(id).orElseThrow(() -> new RuntimeException("Human not found"));
         User user = userService.getCurrentUser();
-        if (!Objects.equals(human.getUser().getId(), user.getId())) {
+        if (user.getRole() != Role.ROLE_ADMIN && !Objects.equals(human.getUser().getId(), user.getId())) {
             throw new RuntimeException("Human doesn't belong to this user");
         }
         humanRepository.deleteById(id);

@@ -2,6 +2,7 @@ package itmo.infsys.service;
 
 import itmo.infsys.domain.dto.CarDTO;
 import itmo.infsys.domain.model.Car;
+import itmo.infsys.domain.model.Role;
 import itmo.infsys.domain.model.User;
 import itmo.infsys.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class CarService {
     public void deleteCar(Long id) {
         Car car = carRepository.findById(id).orElseThrow(() -> new RuntimeException("Car not found"));
         User user = userService.getCurrentUser();
-        if (!Objects.equals(car.getUser().getId(), user.getId())) {
+        if (user.getRole() != Role.ROLE_ADMIN && !Objects.equals(car.getUser().getId(), user.getId())) {
             throw new RuntimeException("Car doesn't belong to this user");
         }
         carRepository.deleteById(id);

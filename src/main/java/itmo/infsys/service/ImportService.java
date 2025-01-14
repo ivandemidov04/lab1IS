@@ -87,8 +87,21 @@ public class ImportService {
     }
 
     public Page<ImportDTO> getPageImports(int page, int size) {
+        User user = userService.getCurrentUser();
         Pageable pageable = PageRequest.of(page, size);
-        return mapImportsToImportDTOs(importRepository.findAll(pageable));
+        if (user.getRole() == Role.ROLE_ADMIN) {
+            return mapImportsToImportDTOs(importRepository.findAll(pageable));
+        } else {
+            return mapImportsToImportDTOs(importRepository.findByUserId(user.getId(), pageable));
+        }
+    }
+
+    public void deleteImport(Long id) {
+        importRepository.deleteById(id);
+    }
+
+    public void deleteAllImports() {
+        importRepository.deleteAll();
     }
 
     public ImportDTO mapImportToImportDTO(Import importt) {

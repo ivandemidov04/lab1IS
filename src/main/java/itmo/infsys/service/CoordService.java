@@ -2,6 +2,7 @@ package itmo.infsys.service;
 
 import itmo.infsys.domain.dto.CoordDTO;
 import itmo.infsys.domain.model.Coord;
+import itmo.infsys.domain.model.Role;
 import itmo.infsys.domain.model.User;
 import itmo.infsys.repository.CoordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class CoordService {
     public void deleteCoord(Long id) {
         Coord coord = coordRepository.findById(id).orElseThrow(() -> new RuntimeException("Coord not found"));
         User user = userService.getCurrentUser();
-        if (!Objects.equals(coord.getUser().getId(), user.getId())) {
+        if (user.getRole() != Role.ROLE_ADMIN && !Objects.equals(coord.getUser().getId(), user.getId())) {
             throw new RuntimeException("Coord doesn't belong to this user");
         }
         coordRepository.deleteById(id);
