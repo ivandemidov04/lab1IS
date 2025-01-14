@@ -2,6 +2,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import CarTable from "../tables/CarTable";
 import CoordinatesTable from "../tables/CoordinatesTable";
 import HumanbeingTable from "../tables/HumanbeingTable";
+import Import from "../features/Import.jsx";
+import ImportTable from "../tables/ImportTable.jsx";
 
 function Home() {
     const location = useLocation();
@@ -65,7 +67,10 @@ function Home() {
             </header>
 
             <h2>Uploading file</h2>
-            {/*<Import/>*/}
+            <Import/>
+
+            <h2>Imports</h2>
+            <ImportTable/>
 
             <h2>Cars</h2>
             <CarTable/>

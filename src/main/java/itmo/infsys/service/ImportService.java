@@ -27,51 +27,42 @@ import java.util.Map;
 @Service
 public class ImportService {
     private final ImportRepository importRepository;
-    private final HumanService humanService;
     private final UserService userService;
     private final CarRepository carRepository;
     private final CoordRepository coordRepository;
     private final HumanRepository humanRepository;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    public ImportService(ImportRepository importRepository, HumanService humanService, UserService userService,
-                         CarRepository carRepository, CoordRepository coordRepository, HumanRepository humanRepository, SimpMessagingTemplate messagingTemplate) {
+    public ImportService(ImportRepository importRepository, UserService userService, CarRepository carRepository,
+                         CoordRepository coordRepository, HumanRepository humanRepository, SimpMessagingTemplate simpMessagingTemplate) {
         this.importRepository = importRepository;
-        this.humanService = humanService;
         this.userService = userService;
         this.carRepository = carRepository;
         this.coordRepository = coordRepository;
         this.humanRepository = humanRepository;
-        this.messagingTemplate = messagingTemplate;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     public ImportDTO createImport(String filename, Boolean status) {
         User user = userService.getCurrentUser();
         Import importt = importRepository.save(new Import(filename, status, user));
-        messagingTemplate.convertAndSend("/topic/import_history", importRepository.findAll());
+        simpMessagingTemplate.convertAndSend("/topic/import", importRepository.findAll());
         return mapImportToImportDTO(importt);
     }
 
     @Transactional
     public Boolean importFromFile(MultipartFile file)  {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        List<HumanDTO> humanDTOs = objectMapper.readValue(file.getInputStream(), objectMapper.getTypeFactory().constructCollectionType(List.class, ImportDTO.class));
-//        Boolean status = humanService.saveAll(humanDTOs);
         try {
             parseJsonFile(file);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
-//        String newFilename = saveFile(file);
+        simpMessagingTemplate.convertAndSend("/topic/car", carRepository.findAll());
+        simpMessagingTemplate.convertAndSend("/topic/coord", coordRepository.findAll());
+        simpMessagingTemplate.convertAndSend("/topic/human", humanRepository.findAll());
         return true;
-//        Import importt = new Import(
-//                file.getName(),
-//                status,
-//                userService.getCurrentUser()
-//        );
-//        return mapImportToImportDTO(importt);
     }
 
     private void parseJsonFile(MultipartFile file) throws Exception {

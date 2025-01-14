@@ -23,7 +23,7 @@ public class Import {
     @Column(name = "status")
     private Boolean status;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 

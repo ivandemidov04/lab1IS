@@ -29,8 +29,8 @@ public class ImportController {
     }
 
     @PostMapping("/import")
-    public ResponseEntity<Boolean> importFromFile (@RequestParam("file") MultipartFile file) throws IOException {
-        return new ResponseEntity<>(importService.importFromFile(file), HttpStatus.OK);
+    public Boolean importFromFile (@RequestParam("file") MultipartFile file) {
+        return importService.importFromFile(file);
     }
 
     @PostMapping
