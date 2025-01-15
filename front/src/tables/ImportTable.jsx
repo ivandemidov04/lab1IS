@@ -57,8 +57,30 @@ const ImportTable = () => {
         fetchImports(currentPage);
     }, [currentPage]);
 
-    const handleDownload = async () => {
-        console.log("DOWNLOAD")
+    const handleDownload = async (id, filename) => {
+        // console.log(JSON.stringify({ id, filename }))
+        try {
+            const response = await fetch('http://localhost:8080/api/file/download', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`,
+                },
+                body: JSON.stringify(filename)
+            })
+            // const data = await response.json()
+            // console.log(data)
+            if (response.ok) {
+                const data = await response.blob();  // Используем blob для получения бинарных данных
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(data);
+                link.download = filename;  // Устанавливаем имя файла для скачивания
+                link.click();
+            } else {
+                console.error('Ошибка при скачивании файла:', await response.text());
+            }
+        } catch (error) {
+            console.error('Ошибка при отправке файла', error);
+        }
     };
 
     const handleNext = () => {
@@ -96,7 +118,7 @@ const ImportTable = () => {
                             <td>{importt.status ? 'Success' : 'Failed'}</td>
                             <td>{importt.userId}</td>
                             <td>
-                                <button onClick={() => handleDownload()}>Download</button>
+                                <button onClick={() => handleDownload(importt.id, importt.name)}>Download</button>
                             </td>
                         </tr>
                     ))}

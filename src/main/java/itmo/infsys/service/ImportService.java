@@ -1,5 +1,9 @@
 package itmo.infsys.service;
 
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import itmo.infsys.domain.dto.ImportDTO;
 import itmo.infsys.domain.model.*;
 import itmo.infsys.repository.CarRepository;
@@ -7,6 +11,7 @@ import itmo.infsys.repository.CoordRepository;
 import itmo.infsys.repository.HumanRepository;
 import itmo.infsys.repository.ImportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +38,22 @@ public class ImportService {
     private final CoordRepository coordRepository;
     private final HumanRepository humanRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private MinioClient minioClient;
+    @Value("${minio.bucket-name}")
+    private String bucketName;
+    private long filenameID = 0;
 
     @Autowired
     public ImportService(ImportRepository importRepository, UserService userService, CarRepository carRepository,
-                         CoordRepository coordRepository, HumanRepository humanRepository, SimpMessagingTemplate simpMessagingTemplate) {
+                         CoordRepository coordRepository, HumanRepository humanRepository,
+                         SimpMessagingTemplate simpMessagingTemplate, MinioClient minioClient) {
         this.importRepository = importRepository;
         this.userService = userService;
         this.carRepository = carRepository;
         this.coordRepository = coordRepository;
         this.humanRepository = humanRepository;
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.minioClient = minioClient;
     }
 
     public ImportDTO createImport(String filename, Boolean status) {
@@ -55,6 +67,7 @@ public class ImportService {
     public Boolean importFromFile(MultipartFile file)  {
         try {
             parseJsonFile(file);
+            saveFile(file);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
@@ -68,14 +81,12 @@ public class ImportService {
     private void parseJsonFile(MultipartFile file) throws Exception {
         String content = new String(file.getBytes());
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<Map<String, String>>>() {
-        }.getType();
+        Type listType = new TypeToken<List<Map<String, String>>>() {}.getType();
         List<Map<String, String>> jsonArray = gson.fromJson(content, listType);
         convertJsonToCitizenArray(jsonArray);
     }
 
     private void convertJsonToCitizenArray(List<Map<String, String>> json) throws Exception {
-//        Human[] humans = new Human[json.size()];
         for (int i = 0; i < json.size(); i++) {
             Coord coord = new Coord(json.get(i), userService.getCurrentUser());
             Coord savedCoord = coordRepository.save(coord);
@@ -83,6 +94,25 @@ public class ImportService {
             Car savedCar = carRepository.save(car);
             Human human = new Human(json.get(i), savedCoord, savedCar, userService.getCurrentUser());
             humanRepository.save(human);
+        }
+    }
+
+    private void saveFile(MultipartFile file) throws Exception {
+        System.out.println("??????????????" + file.getOriginalFilename());
+//        String objectName = filenameID++ + "_" + file.getOriginalFilename();
+        String objectName = file.getOriginalFilename();
+        try {
+            if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+                System.out.println("Бакет был успешно создан: " + bucketName);
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                minioClient.putObject(PutObjectArgs.builder().bucket(bucketName).object(objectName)
+                        .stream(inputStream, -1, 10485760).build());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -105,13 +135,12 @@ public class ImportService {
     }
 
     public ImportDTO mapImportToImportDTO(Import importt) {
-        ImportDTO importDTO =  new ImportDTO(
+        return new ImportDTO(
                 importt.getId(),
                 importt.getName(),
                 importt.getStatus(),
                 importt.getUser().getId()
         );
-        return importDTO;
     }
 
     public Page<ImportDTO> mapImportsToImportDTOs(Page<Import> importsPage) {

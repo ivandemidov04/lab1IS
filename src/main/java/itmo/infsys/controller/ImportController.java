@@ -3,22 +3,60 @@ package itmo.infsys.controller;
 import itmo.infsys.domain.dto.ImportDTO;
 import itmo.infsys.service.ImportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
+
+import java.io.InputStream;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/file")
 public class ImportController {
     private final ImportService importService;
+    private final MinioClient minioClient;
+
+    @Value("${minio.bucket-name}")
+    private String bucketName;
 
     @Autowired
-    public ImportController(ImportService importService) {
+    public ImportController(ImportService importService, MinioClient minioClient) {
         this.importService = importService;
+        this.minioClient = minioClient;
+    }
+
+    @PostMapping("download")
+    public ResponseEntity<byte[]> getFile(@RequestBody String filename) {
+//        String filename = body.get("filename");
+//        String id = body.get("id");
+        filename = filename.substring(1, filename.length() - 1);
+        System.out.println("!!!!!!!!!!!!!!" + filename);
+
+        String objectName = filename;
+        try (InputStream stream = minioClient
+                .getObject(GetObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(objectName)
+                        .build())) {
+
+            byte[] fileBytes = stream.readAllBytes();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + objectName);
+            headers.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
+
+            return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @GetMapping("/page")
@@ -29,7 +67,7 @@ public class ImportController {
     }
 
     @PostMapping("/import")
-    public Boolean importFromFile (@RequestParam("file") MultipartFile file) {
+    public Boolean importFromFile (@RequestBody MultipartFile file) {
         return importService.importFromFile(file);
     }
 

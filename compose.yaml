@@ -14,10 +14,30 @@ services:
     networks:
       - postgresql_bd_net
 
+  minio:
+    image: minio/minio:latest
+    command: server --console-address ":9001" /data/
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - minio-storage:/data
+    networks:
+      - postgresql_bd_net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
 networks:
   postgresql_bd_net:
     driver: bridge
 
 volumes:
   postgresql-data:
-  pgadmin-data:
+  minio-storage:

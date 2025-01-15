@@ -52,6 +52,8 @@ const FileUpload = () => {
 
         setSelectedFile(null);
         document.getElementById('fileInput').value = '';
+
+        console.log("file was sended")
     };
 
     return (
