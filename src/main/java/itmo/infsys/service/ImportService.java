@@ -41,7 +41,6 @@ public class ImportService {
     private MinioClient minioClient;
     @Value("${minio.bucket-name}")
     private String bucketName;
-    private long filenameID = 0;
 
     @Autowired
     public ImportService(ImportRepository importRepository, UserService userService, CarRepository carRepository,
@@ -98,7 +97,6 @@ public class ImportService {
     }
 
     private void saveFile(MultipartFile file) throws Exception {
-        System.out.println("??????????????" + file.getOriginalFilename());
 //        String objectName = filenameID++ + "_" + file.getOriginalFilename();
         String objectName = file.getOriginalFilename();
         try {

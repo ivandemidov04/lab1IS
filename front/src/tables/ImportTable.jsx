@@ -58,14 +58,13 @@ const ImportTable = () => {
     }, [currentPage]);
 
     const handleDownload = async (id, filename) => {
-        // console.log(JSON.stringify({ id, filename }))
+        console.log(JSON.stringify({ id, filename }))
         try {
-            const response = await fetch('http://localhost:8080/api/file/download', {
+            const response = await fetch(`http://localhost:8080/api/file/download?id=${id}&filename=${filename}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
-                },
-                body: JSON.stringify(filename)
+                }
             })
             // const data = await response.json()
             // console.log(data)

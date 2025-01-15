@@ -33,12 +33,7 @@ public class ImportController {
     }
 
     @PostMapping("download")
-    public ResponseEntity<byte[]> getFile(@RequestBody String filename) {
-//        String filename = body.get("filename");
-//        String id = body.get("id");
-        filename = filename.substring(1, filename.length() - 1);
-        System.out.println("!!!!!!!!!!!!!!" + filename);
-
+    public ResponseEntity<byte[]> getFile(@RequestParam("id") Long id, @RequestParam("filename") String filename) {
         String objectName = filename;
         try (InputStream stream = minioClient
                 .getObject(GetObjectArgs.builder()
