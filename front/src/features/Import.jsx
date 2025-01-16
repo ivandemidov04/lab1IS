@@ -31,8 +31,11 @@ const FileUpload = () => {
             })
 
             status = await response.json()
+            console.log("!!! ", status)
         } catch (error) {
             console.error('Ошибка при отправке файла', error);
+            status = false
+            console.log("??? ", status)
         }
 
         try {
