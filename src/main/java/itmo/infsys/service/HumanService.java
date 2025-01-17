@@ -1,6 +1,8 @@
 package itmo.infsys.service;
 
+import itmo.infsys.domain.dto.CoordDTO;
 import itmo.infsys.domain.dto.HumanDTO;
+import itmo.infsys.domain.dto.NestedHumanDTO;
 import itmo.infsys.domain.model.*;
 import itmo.infsys.repository.CarRepository;
 import itmo.infsys.repository.CoordRepository;
@@ -64,9 +66,32 @@ public class HumanService {
         return mapHumanToHumanDTO(humanSaved);
     }
 
+    public HumanDTO createNestedHuman(NestedHumanDTO nestedHumanDTO) {
+        User user = userService.getCurrentUser();
+        Coord coord = coordRepository.save(new Coord(nestedHumanDTO.getCoord().getX(), nestedHumanDTO.getCoord().getY(), user));
+        Car car = carRepository.save(new Car(nestedHumanDTO.getCar().getCool(), user));
+        Human human = new Human(
+                nestedHumanDTO.getName(),
+                coord,
+                nestedHumanDTO.getRealHero(),
+                nestedHumanDTO.getHasToothpick(),
+                car,
+                nestedHumanDTO.getMood(),
+                nestedHumanDTO.getImpactSpeed(),
+                nestedHumanDTO.getWeaponType(),
+                user
+        );
+        Human humanSaved = humanRepository.save(human);
+        return mapHumanToHumanDTO(humanSaved);
+    }
+
     public HumanDTO getHumanById(Long id) {
         Human human = humanRepository.findById(id).get();
         return mapHumanToHumanDTO(human);
+    }
+
+    public List<HumanDTO> getAllHumans() {
+        return mapHumansToHumanDTOsList(humanRepository.findAll());
     }
 
     public Page<HumanDTO> getPageHumans(int page, int size) {
@@ -136,9 +161,11 @@ public class HumanService {
         return new PageImpl<>(humansDTOs, humansPage.getPageable(), humansPage.getTotalElements());
     }
 
-    //TODO: csv/xml
-    //TODO: имя юзера юник
-    public void saveAll(Human[] humans) {
-        humanRepository.saveAll(Arrays.asList(humans));
+    public List<HumanDTO> mapHumansToHumanDTOsList(List<Human> humans) {
+        List<HumanDTO> humanDTOs = new ArrayList<>();
+        for (Human human : humans) {
+            humanDTOs.add(mapHumanToHumanDTO(human));
+        }
+        return humanDTOs;
     }
 }

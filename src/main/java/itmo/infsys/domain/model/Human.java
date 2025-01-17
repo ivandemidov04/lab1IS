@@ -37,7 +37,7 @@ public class Human {
     @Column(name = "has_toothpick")
     private Boolean hasToothpick;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "cars_id")
     private Car car;
 
