@@ -41,6 +41,7 @@ public class ImportService {
     private MinioClient minioClient;
     @Value("${minio.bucket-name}")
     private String bucketName;
+    private Long filenameID = 0L;
 
     @Autowired
     public ImportService(ImportRepository importRepository, UserService userService, CarRepository carRepository,
@@ -66,7 +67,6 @@ public class ImportService {
     public Boolean importFromFile(MultipartFile file)  {
         try {
             parseJsonFile(file);
-            saveFile(file);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
@@ -96,9 +96,9 @@ public class ImportService {
         }
     }
 
-    private void saveFile(MultipartFile file) throws Exception {
-//        String objectName = filenameID++ + "_" + file.getOriginalFilename();
-        String objectName = file.getOriginalFilename();
+    public void saveFile(MultipartFile file) {
+        filenameID++;
+        String objectName = filenameID + "_" + file.getOriginalFilename();
         try {
             if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());

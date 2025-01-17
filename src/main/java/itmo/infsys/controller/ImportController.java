@@ -33,8 +33,8 @@ public class ImportController {
     }
 
     @PostMapping("download")
-    public ResponseEntity<byte[]> getFile(@RequestParam("id") Long id, @RequestParam("filename") String filename) {
-        String objectName = filename;
+    public ResponseEntity<byte[]> getFile(@RequestParam("id") String id, @RequestParam("filename") String filename) {
+        String objectName = id + "_" + filename;
         try (InputStream stream = minioClient
                 .getObject(GetObjectArgs.builder()
                         .bucket(bucketName)
@@ -63,6 +63,7 @@ public class ImportController {
 
     @PostMapping("/import")
     public Boolean importFromFile (@RequestBody MultipartFile file) {
+        importService.saveFile(file);
         return importService.importFromFile(file);
     }
 
