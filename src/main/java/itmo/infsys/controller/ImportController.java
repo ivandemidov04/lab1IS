@@ -62,9 +62,11 @@ public class ImportController {
     }
 
     @PostMapping("/import")
-    public Boolean importFromFile (@RequestBody MultipartFile file) {
+    public ResponseEntity<Void> importFromFile (@RequestBody MultipartFile file) {
         importService.saveFile(file);
-        return importService.importFromFile(file);
+        Boolean status = importService.importFromFile(file);
+        importService.createImport(file.getOriginalFilename(), status);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping

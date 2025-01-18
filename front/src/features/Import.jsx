@@ -38,20 +38,20 @@ const FileUpload = () => {
             console.log("??? ", status)
         }
 
-        try {
-            const response2 = await fetch(`http://localhost:8080/api/file?filename=${selectedFile.name}&status=${status}`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${jwtToken}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            const data2 = await response2.json();
-            console.log("importDTO: ", data2)
-        } catch (error) {
-            console.error('Ошибка при отправке22222:', error);
-        }
+        // try {
+        //     const response2 = await fetch(`http://localhost:8080/api/file?filename=${selectedFile.name}&status=${status}`, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Authorization': `Bearer ${jwtToken}`,
+        //             'Content-Type': 'application/json',
+        //         },
+        //     });
+        //
+        //     const data2 = await response2.json();
+        //     console.log("importDTO: ", data2)
+        // } catch (error) {
+        //     console.error('Ошибка при отправке22222:', error);
+        // }
 
         setSelectedFile(null);
         document.getElementById('fileInput').value = '';

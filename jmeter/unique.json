@@ -1,0 +1,11 @@
+[{
+  "name": "unique_snowflake",
+  "x": 2.0,
+  "y": 2,
+  "realHero": true,
+  "hasToothpick": true,
+  "cool": true,
+  "mood": "SADNESS",
+  "impactSpeed": 20.0,
+  "weaponType": "AXE"
+}]
